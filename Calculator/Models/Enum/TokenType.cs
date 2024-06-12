@@ -15,6 +15,7 @@ namespace Calculator.Models.Enum
         Power,
         Operand,
         OpenPar,
-        ClosePar
+        ClosePar,
+        Function,
     }
 }
