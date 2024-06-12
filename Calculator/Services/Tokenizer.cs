@@ -12,9 +12,6 @@ namespace Calculator.Services
 {
     public class Tokenizer : ITokenizer
     {
-        private static readonly char[] _operations = ['+', '-', '*', '/', '^'];
-        private static readonly char _opBracket = '(';
-        private static readonly char _closeBracket = ')';
         private static readonly string[] _builtInFunctions = ["sin", "cos", "ln", "th", "exp"];
 
         //Map invariants of known operations to operations itself
@@ -56,13 +53,14 @@ namespace Calculator.Services
                 {
                     tokens.Add(GetNumber(source, ref curr));
                 }
-                else if (char.IsLetter(source[currChar]))
+                else if (char.IsLetter(currChar))
                 {
                     tokens.Add(GetFunction(source, ref curr));
                 }
                 else
                 {
                     tokens.Add(new Token() { Type = _knownCharTokenType[currChar], Value = currChar.ToString() });
+                    curr++;
                 }
             }
 
@@ -88,6 +86,8 @@ namespace Calculator.Services
             return result;
         }
 
+        private static readonly char[] _validCharAfterNumber = ['+', '-', '*', '/', '^', ')'];
+        private static readonly char _point = '.';
         /// <summary>
         /// Retrieves a number from string, starting at certain position of source string
         /// and moves current pointer position behind number
@@ -101,9 +101,10 @@ namespace Calculator.Services
             var right = left + 1;
 
             //while char is not operation, skip it
-            while (right < source.Length && !_operations.Contains(source[right]))
+            while (right < source.Length &&
+                !_validCharAfterNumber.Contains(source[right]))
             {
-                if(!char.IsDigit(source[right]))
+                if(!char.IsDigit(source[right]) && source[right] != _point)
                 {
                     throw new UnexpectedCharacterException(source[right], right);
                 }
@@ -112,9 +113,12 @@ namespace Calculator.Services
 
             var number = source.Substring(left, right - left);
 
+            left = right;
+
             return new Token() { Type = TokenType.Operand, Value = number };
         }
-
+        
+        private static readonly char _opBracket = '(';
         /// <summary>
         /// Retrieves a function from string, starting at certain position of source string
         /// and moves current pointer position behind function name
@@ -144,6 +148,8 @@ namespace Calculator.Services
             {
                 throw new UnrecognizedBuiltInFunctionException(funcName);
             }
+
+            left = right;
 
             return new Token() { Type = TokenType.Function, Value = funcName };
         }
