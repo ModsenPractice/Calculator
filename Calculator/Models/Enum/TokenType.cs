@@ -17,5 +17,6 @@ namespace Calculator.Models.Enum
         OpenPar,
         ClosePar,
         Function,
+        Unary,
     }
 }

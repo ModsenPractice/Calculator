@@ -51,6 +51,27 @@ namespace Calculator.Tests.Services
         }
 
         [TestMethod]
+        public void UnaryOperationsTokenization()
+        {
+            var result = _tokenizer.Tokenize("-1.2+(+22.2)+5");
+
+            IEnumerable<Token> expectedResult =
+            [
+                new(TokenType.Unary, "-"),
+                new(TokenType.Operand, "1.2"),
+                new(TokenType.Plus, "+"),
+                new(TokenType.OpenPar, "("),
+                new(TokenType.Unary, "+"),
+                new(TokenType.Operand, "22.2"),
+                new(TokenType.ClosePar, ")"),
+                new(TokenType.Plus, "+"),
+                new(TokenType.Operand, "5"),
+            ];
+
+            CollectionAssert.AreEqual(expectedResult.ToArray(), result.ToArray());
+        }
+
+        [TestMethod]
         public void IncorrectStringTokenization()
         {
             try

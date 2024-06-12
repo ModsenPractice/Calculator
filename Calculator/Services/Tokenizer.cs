@@ -12,17 +12,18 @@ namespace Calculator.Services
 {
     public class Tokenizer : ITokenizer
     {
-        private static readonly string[] _builtInFunctions = ["sin", "cos", "ln", "th", "exp"];
+        private static readonly string[] _builtInFunctions = ["sin", "cos", "ln", "tg", "exp"];
+        private static readonly char _opBracket = '(';
 
         //Map invariants of known operations to operations itself
-        private static readonly Dictionary<char, char> _operationsInvarians = new Dictionary<char, char>()
+        private static readonly Dictionary<char, char> _operationsInvarians = new()
         {
             {'÷', '/'},
             {'×', '*'},
         };
 
         //Map known character to corresponding token types
-        private static readonly Dictionary<char, TokenType> _knownCharTokenType = new Dictionary<char, TokenType>()
+        private static readonly Dictionary<char, TokenType> _knownCharTokenType = new()
         {
             { '+', TokenType.Plus },
             { '-', TokenType.Minus },
@@ -32,6 +33,11 @@ namespace Calculator.Services
             { '(', TokenType.OpenPar },
             { ')', TokenType.ClosePar },
         };
+
+        //Operations that can possibly be unary
+        private static readonly char[] _possibleUnary = ['+', '-'];
+        //Those tokens must NOT be placed before unary
+        private static readonly TokenType[] _preUnaryExclude = [ TokenType.Operand, TokenType.ClosePar ];
 
         /// <summary>
         /// Creates collection of tokens from string expression
@@ -56,6 +62,12 @@ namespace Calculator.Services
                 else if (char.IsLetter(currChar))
                 {
                     tokens.Add(GetFunction(source, ref curr));
+                }
+                else if (_possibleUnary.Contains(currChar) &&
+                    (tokens.Count == 0 || !_preUnaryExclude.Contains(tokens.Last().Type)))
+                {
+                    tokens.Add(new Token() { Type = TokenType.Unary, Value = currChar.ToString() });
+                    curr++;
                 }
                 else
                 {
@@ -118,7 +130,6 @@ namespace Calculator.Services
             return new Token() { Type = TokenType.Operand, Value = number };
         }
         
-        private static readonly char _opBracket = '(';
         /// <summary>
         /// Retrieves a function from string, starting at certain position of source string
         /// and moves current pointer position behind function name
