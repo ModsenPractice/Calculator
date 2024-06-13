@@ -1,8 +1,9 @@
 namespace Calculator.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class FunctionRepositoryTest
     {
+
         [TestMethod]
         public void TestMethod1()
         {
