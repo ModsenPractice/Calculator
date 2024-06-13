@@ -33,8 +33,7 @@ namespace Calculator.Services.Data.Repositories
             var updatedFunctions = new List<Function>(functions) { function };
             string updatedFunctionsJson = JsonSerializer.Serialize(updatedFunctions);
             await File.WriteAllTextAsync(functionFilePath, updatedFunctionsJson);
-            /*using FileStream fs = File.Create(functionFilePath);
-            await JsonSerializer.SerializeAsync(fs, updatedFunctionsJson);*/
+
         }
 
         public async Task DeleteFunctionAsync(string name)
@@ -44,8 +43,6 @@ namespace Calculator.Services.Data.Repositories
             updatedFunctions.RemoveAll(f => f.Name == name);
             string updatedFunctionsJson = JsonSerializer.Serialize(updatedFunctions);
             await File.WriteAllTextAsync(functionFilePath, updatedFunctionsJson);
-            /*using FileStream fs = File.Create(functionFilePath);
-            await JsonSerializer.SerializeAsync(fs, updatedFunctionsJson);*/
 
         }
     }

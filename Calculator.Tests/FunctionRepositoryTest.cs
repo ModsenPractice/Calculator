@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Calculator.Tests
 {
     [TestClass]
-    public class UnitTestFunctionRepository
+    public class FunctionRepositoryTest
     {
         private string? testFunctionsFilePath;
 
@@ -54,6 +54,37 @@ namespace Calculator.Tests
             Assert.IsNotNull(functions);
             Assert.AreEqual(1, functions.Count());
 
+            
+        }
+
+        [TestMethod]
+        public async Task DeleteFunctionAsync_RemovesFunctionFromRepository()
+        {
+            // Arrange
+            var repository = new FunctionRepository();
+            var function1 = new Function
+            {
+                Name = "f1",
+                Params = new Dictionary<string, string>(),
+                Expression = "x+x^2"
+            };
+            var function2 = new Function
+            {
+                Name = "f2",
+                Params = new Dictionary<string, string>(),
+                Expression = "x / y"
+            };
+            await repository.AddFunctionAsync(function1);
+            await repository.AddFunctionAsync(function2);
+
+            // Act
+            await repository.DeleteFunctionAsync("f1");
+            IEnumerable<Function> functions = await repository.GetFunctionsAsync();
+
+            // Assert
+            Assert.AreEqual(1, functions.Count());
+            Assert.AreEqual("f2", functions.First().Name);
+            Assert.AreEqual("x / y", functions.First().Expression);
         }
     }
 }

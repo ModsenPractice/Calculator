@@ -11,7 +11,7 @@ namespace Calculator.Services.Data.Repositories
 {
     public class VariableRepository : IVariableRepository
     {
-        private readonly string variableFilePath = "variables.json";
+        private readonly string variableFilePath = "C:\\Users\\POOLSHOT\\Source\\Repos\\Calculator\\Calculator\\variables.json";
         public async Task<IEnumerable<Variable>> GetVariablesAsync()
         {
             string variablesJson = await File.ReadAllTextAsync(variableFilePath);
@@ -34,8 +34,6 @@ namespace Calculator.Services.Data.Repositories
             var updatedVariables = new List<Variable>(variables) { variable };
             string updatedVariableJson = JsonSerializer.Serialize(updatedVariables);
             await File.WriteAllTextAsync(variableFilePath, updatedVariableJson);
-            /*using FileStream fs = File.Create(variableFilePath);
-            await JsonSerializer.SerializeAsync(fs, updatedVariablesJson);*/
 
         }
 
@@ -46,8 +44,6 @@ namespace Calculator.Services.Data.Repositories
             updatedVariables.RemoveAll(f => f.Name == name);
             string updatedVariablesJson = JsonSerializer.Serialize(updatedVariables);
             await File.WriteAllTextAsync(variableFilePath, updatedVariablesJson);
-            /*using FileStream fs = File.Create(variableFilePath);
-            await JsonSerializer.SerializeAsync(fs, updatedVariablesJson);*/
 
         }
     }
