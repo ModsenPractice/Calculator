@@ -10,7 +10,7 @@ namespace Calculator.Services.Data.Repositories
 {
     public class FunctionRepository : IFunctionRepository
     {
-        private readonly string functionFilePath = "functions.json";
+        private readonly string functionFilePath = "C:\\Users\\POOLSHOT\\Source\\Repos\\Calculator\\Calculator\\functions.json";
         public async Task<IEnumerable<Function>> GetFunctionsAsync()
         {
             string? functionsJson = await File.ReadAllTextAsync(functionFilePath);
