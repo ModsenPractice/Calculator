@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Calculator.Services;
+using Calculator.Services.Interfaces;
+using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace Calculator
 {
@@ -19,7 +22,27 @@ namespace Calculator
     		builder.Logging.AddDebug();
 #endif
 
+            builder.Services.ConfigureValidators();
+
             return builder.Build();
+        }
+
+        private static IServiceCollection ConfigureValidators(this IServiceCollection services)
+        {
+            var types = Assembly
+                .GetExecutingAssembly()
+                .GetTypes();
+
+            var interfaceType = typeof(IValidator);
+            var implementations = types
+                    .Where(type => interfaceType.IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract);
+
+            foreach (var implementation in implementations)
+            {
+                services.AddTransient(interfaceType, implementation);
+            }
+
+            return services.AddTransient<IValidatorManager, ValidatorManager>();
         }
     }
 }

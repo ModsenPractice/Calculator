@@ -12,17 +12,18 @@ namespace Calculator.Tests.ValidateTests
         [DataRow("12*(25+3)")]
         [DataRow("(1+2*(3-4))")]
         [DataRow("((5+6)*7-8)")]
-        [DataRow("4--2.24")]
+        [DataRow("4-(-2.24)")]
         [DataRow("24+1.21")]
         [DataRow("(24+1.12)+(-12)")]
         public void Validate_CorrectExpresision_ReturnOkStatus(string source)
         {
-            var bracketsValidator = new RepitableOperatorsValidator();
+            var repitableValidator = new RepitableOperatorsValidator();
             var result = new Result();
 
-            bracketsValidator.Validate(source, result);
+            repitableValidator.Validate(source, result);
 
             Assert.AreEqual(ResultStatus.Ok, result.Status);
+            Assert.IsTrue(result.ErrorMessages.Count == 0);
         }
 
         [DataTestMethod]
@@ -30,14 +31,16 @@ namespace Calculator.Tests.ValidateTests
         [DataRow("24+56+1//4")]
         [DataRow("78**4++4")]
         [DataRow("65++2")]
+        [DataRow("2--1")]
         public void Validate_ExpressionWithRepitableOperators_ReturnErrorStatus(string source)
         {
-            var bracketsValidator = new RepitableOperatorsValidator();
+            var repitableValidator = new RepitableOperatorsValidator();
             var result = new Result();
 
-            bracketsValidator.Validate(source, result);
+            repitableValidator.Validate(source, result);
 
             Assert.AreEqual(ResultStatus.Error, result.Status);
+            Assert.IsTrue(result.ErrorMessages.Count != 0);
         }
     }
 }

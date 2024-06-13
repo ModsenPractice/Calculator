@@ -23,6 +23,7 @@ namespace Calculator.Tests.ValidateTests
             bracketsValidator.Validate(source, result);
 
             Assert.AreEqual(ResultStatus.Ok, result.Status);
+            Assert.IsTrue(result.ErrorMessages.Count == 0);
         }
 
         [DataTestMethod]
@@ -41,6 +42,7 @@ namespace Calculator.Tests.ValidateTests
             bracketsValidator.Validate(source, result);
 
             Assert.AreEqual(ResultStatus.Error, result.Status);
+            Assert.IsTrue(result.ErrorMessages.Count != 0);
         }
     }
 }

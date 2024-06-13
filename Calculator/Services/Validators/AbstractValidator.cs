@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Calculator.Services.Validators
 {
-    public class AbstractValidator : IValidator
+    public abstract class AbstractValidator : IValidator
     {
         private IValidator? _nextValidator;
 

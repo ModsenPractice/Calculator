@@ -6,7 +6,7 @@ namespace Calculator.Services.Validators
     public class RepitableOperatorsValidator : AbstractValidator
     {
         private const string RepitableOperatorsErrorMessage = "";
-        private const string Operators = "+*/";
+        private const string Operators = "+*/-";
 
         public override void Validate(string source, Result result)
         {
