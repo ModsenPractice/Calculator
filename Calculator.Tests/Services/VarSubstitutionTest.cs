@@ -1,3 +1,7 @@
+using Calculator.Models;
+using Calculator.Services;
+using Calculator.Services.Data.Interfaces;
+using Calculator.Services.Interfaces;
 
 namespace Calculator.Tests
 {
@@ -5,22 +9,26 @@ namespace Calculator.Tests
     public class VarSubstitutionTest
     {
         private ISubstitutionService _substitutionService; 
-        private IVariableRepository _rep; 
 
-        public VarSubstitutionTest(){
-            _substitutionService = new VarSubstitutionService(new TestRepository()); 
+        public VarSubstitutionTest()
+        {
+            _substitutionService = new VarSubstitutionService(new TestRepository());
         }
 
         [TestMethod]
-        public async void ChangeSymbols()
+        public async Task ChangeSymbols()
         {
             string result = await _substitutionService.ReplaceAsync("x+y"); 
             string expectedResult = "12+36";
+
+            Assert.AreEqual(expectedResult, result);
         }
 
-        private class TestRepository : IVariableRepository{
+        private class TestRepository : IVariableRepository
+        {
             public async Task<IEnumerable<Variable>> GetVariablesAsync(){
-                return new IEnumerable<Variable>(){ 
+                await Task.CompletedTask;
+                return new List<Variable>(){ 
                     new (){
                         Name = "x", 
                         Value="12"
@@ -46,8 +54,10 @@ namespace Calculator.Tests
             public Task AddVariableAsync(Variable function){
                 throw new NotImplementedException(); 
             }        
-            Task DeleteVariableAsync(string name){
-                throw new NotImplementedException(); 
+
+            public Task DeleteVariableAsync(string source)
+            {
+                throw new NotImplementedException();
             }
         }
     }
