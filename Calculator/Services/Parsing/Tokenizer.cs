@@ -2,18 +2,13 @@
 using Calculator.Models.Enum;
 using Calculator.Services.Exceptions;
 using Calculator.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Calculator.Services
+namespace Calculator.Services.Parsing
 {
     public class Tokenizer : ITokenizer
     {
         private static readonly string[] _builtInFunctions = ["sin", "cos", "ln", "tg", "exp"];
-        private static readonly char _opBracket = '(';
+        private static readonly char[] _possibleUnary = ['+', '-'];
 
         //Map invariants of known operations to operations itself
         private static readonly Dictionary<char, char> _operationsInvarians = new()
@@ -34,10 +29,9 @@ namespace Calculator.Services
             { ')', TokenType.ClosePar },
         };
 
-        //Operations that can possibly be unary
-        private static readonly char[] _possibleUnary = ['+', '-'];
-        //Those tokens must NOT be placed before unary
-        private static readonly TokenType[] _preUnaryExclude = [ TokenType.Operand, TokenType.ClosePar ];
+        public Tokenizer()
+        {
+        }
 
         /// <summary>
         /// Creates collection of tokens from string expression
@@ -46,7 +40,7 @@ namespace Calculator.Services
         /// <returns>collection of tokens representing expression</returns>
         public IEnumerable<Token> Tokenize(string source)
         {
-            var normilizedSource = NormalizeString(source);
+            var input = NormalizeString(source);
 
             var tokens = new List<Token>();
 
@@ -54,17 +48,16 @@ namespace Calculator.Services
 
             while (curr < source.Length)
             {
-                var currChar = normilizedSource[curr];
+                var currChar = input[curr];
                 if (char.IsDigit(currChar))
                 {
-                    tokens.Add(GetNumber(source, ref curr));
+                    tokens.Add(GetNumber(input, ref curr));
                 }
                 else if (char.IsLetter(currChar))
                 {
-                    tokens.Add(GetFunction(source, ref curr));
+                    tokens.Add(GetFunction(input, ref curr));
                 }
-                else if (_possibleUnary.Contains(currChar) &&
-                    (tokens.Count == 0 || !_preUnaryExclude.Contains(tokens.Last().Type)))
+                else if (IsUnary(input, curr))
                 {
                     tokens.Add(new Token() { Type = TokenType.Unary, Value = currChar.ToString() });
                     curr++;
@@ -79,6 +72,13 @@ namespace Calculator.Services
             return tokens;
         }
 
+        private static bool IsUnary(string source, int pos)
+        {
+            if (!_possibleUnary.Contains(source[pos])) { return false; }
+
+            return pos == 0 || source[pos - 1] == '(';
+        }
+
         /// <summary>
         /// Replace invariant character to common ones
         /// </summary>
@@ -89,7 +89,7 @@ namespace Calculator.Services
             var result = source;
             foreach (var kvp in _operationsInvarians)
             {
-                if(source.Contains(kvp.Key))
+                if (source.Contains(kvp.Key))
                 {
                     result = result.Replace(kvp.Key, kvp.Value);
                 }
@@ -98,8 +98,6 @@ namespace Calculator.Services
             return result;
         }
 
-        private static readonly char[] _validCharAfterNumber = ['+', '-', '*', '/', '^', ')'];
-        private static readonly char _point = '.';
         /// <summary>
         /// Retrieves a number from string, starting at certain position of source string
         /// and moves current pointer position behind number
@@ -107,19 +105,13 @@ namespace Calculator.Services
         /// <param name="source">Source string expression</param>
         /// <param name="left">Start of number</param>
         /// <returns>Token of Operand type with number as value</returns>
-        /// <exception cref="UnexpectedCharacterException"></exception>
         private static Token GetNumber(string source, ref int left)
         {
             var right = left + 1;
 
             //while char is not operation, skip it
-            while (right < source.Length &&
-                !_validCharAfterNumber.Contains(source[right]))
+            while (right < source.Length && IsNumberPart(source, right))
             {
-                if(!char.IsDigit(source[right]) && source[right] != _point)
-                {
-                    throw new UnexpectedCharacterException(source[right], right);
-                }
                 right++;
             }
 
@@ -129,7 +121,23 @@ namespace Calculator.Services
 
             return new Token() { Type = TokenType.Operand, Value = number };
         }
-        
+
+        private static bool IsNumberPart(string source, int pos)
+        {
+            if (char.IsDigit(source[pos])) { return true; }
+
+            if (source[pos] == '.')
+            {
+                if (pos == 0 || !char.IsDigit(source[pos - 1]))
+                {
+                    throw new UnexpectedCharacterException(source, pos);
+                }
+                return true;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Retrieves a function from string, starting at certain position of source string
         /// and moves current pointer position behind function name
@@ -137,19 +145,13 @@ namespace Calculator.Services
         /// <param name="source">Source string expression</param>
         /// <param name="left">Start of function name</param>
         /// <returns>Token of Function type with function name as value</returns>
-        /// <exception cref="UnexpectedCharacterException"></exception>
         /// <exception cref="UnrecognizedBuiltInFunctionException"></exception>
         private static Token GetFunction(string source, ref int left)
         {
             var right = left + 1;
 
-            //while char is not open bracket, skip it
-            while (right < source.Length && source[right] != _opBracket)
+            while (right < source.Length && char.IsLetterOrDigit(source[right]))
             {
-                if (!char.IsLetterOrDigit(source[right]))
-                {
-                    throw new UnexpectedCharacterException(source[right], right);
-                }
                 right++;
             }
 

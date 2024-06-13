@@ -8,7 +8,7 @@ namespace Calculator.Services.Exceptions
 {
     public class UnexpectedCharacterException : Exception
     {
-        public UnexpectedCharacterException(char character, int position) :
-            base($"Unexpected character faced during string parsing: {character}, position: {position}") { }
+        public UnexpectedCharacterException(string source, int position) :
+            base($"Unexpected character faced during string parsing. string: {source}, position: {position}") { }
     }
 }
