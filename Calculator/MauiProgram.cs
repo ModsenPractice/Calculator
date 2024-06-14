@@ -29,20 +29,29 @@ namespace Calculator
 
         private static IServiceCollection ConfigureValidators(this IServiceCollection services)
         {
+            services.ConfigureSpecificValidators(typeof(IExpressionValidator))
+                .ConfigureSpecificValidators(typeof(IFunctionValidator))
+                .ConfigureSpecificValidators(typeof(IVariableValidator));
+
+
+            return services.AddTransient<IValidatorManager, ValidatorManager>();
+        }
+
+        private static IServiceCollection ConfigureSpecificValidators(this IServiceCollection services, Type interfaceType)
+        {
             var types = Assembly
                 .GetExecutingAssembly()
                 .GetTypes();
 
-            var interfaceType = typeof(IExpressionValidator);
-            var implementations = types
-                    .Where(type => interfaceType.IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract);
+            var iVariableValidatorImplementations = types
+                .Where(type => interfaceType.IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract);
 
-            foreach (var implementation in implementations)
+            foreach (var implementation in iVariableValidatorImplementations)
             {
                 services.AddTransient(interfaceType, implementation);
             }
 
-            return services.AddTransient<IValidatorManager, ValidatorManager>();
+            return services;
         }
     }
 }
