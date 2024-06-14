@@ -20,7 +20,7 @@ namespace Calculator.Tests.ValidateTests
         [DataRow("(8*5+2)/(9-3)+π")]
         [DataRow("log(1000)+(5^3)-(6/2)")]
         [DataRow("(cos(0)+sin(π/2))*10-5")]
-        public void Validate_CorrectExpresision_ReturnOkStatus(string source)
+        public void Validate_CorrectExpression_ReturnOkStatus(string source)
         {
             var validators = new List<IValidator>() 
             {
@@ -28,7 +28,7 @@ namespace Calculator.Tests.ValidateTests
                 new OperatorPlaceValidator(),
                 new OpenedBracketsValidator(),
                 new DigitValidator(),
-                new RepitableOperatorsValidator()
+                new RepeatableOperatorsValidator()
             };
             var validatorManager = new ValidatorManager(validators);
 
@@ -51,7 +51,7 @@ namespace Calculator.Tests.ValidateTests
                 new OperatorPlaceValidator(),
                 new OpenedBracketsValidator(),
                 new DigitValidator(),
-                new RepitableOperatorsValidator(),
+                new RepeatableOperatorsValidator(),
                 new OperatorWithBracketsValidator()
             };
             var validatorManager = new ValidatorManager(validators);

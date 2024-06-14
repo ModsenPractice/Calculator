@@ -11,7 +11,7 @@ namespace Calculator.Services.Validators
     public class OperatorWithBracketsValidator : AbstractValidator
     {
         private const string WrongOperatorPlaceWithBracketsErrorMessage = "";
-        private const string Operators = "+-*/";
+        private const string Operators = "+-*/^";
 
         public override void Validate(string source, Result result)
         {
@@ -26,14 +26,10 @@ namespace Calculator.Services.Validators
 
         private bool IsWrongPlaceOfOperatorsWithBrackets(string source)
         {
-            for (int i = 1; i < source.Length - 1; i++)
+            for (var i = 1; i < source.Length - 1; i++)
             {
-                if (source[i] == '(' && !Operators.Contains(source[i - 1]))
-                {
-                    return true;
-                }
-
-                if (source[i] == ')' && !Operators.Contains(source[i + 1]))
+                if (source[i] == '(' && !Operators.Contains(source[i - 1]) &&
+                    source[i] == ')' && !Operators.Contains(source[i + 1]))
                 {
                     return true;
                 }

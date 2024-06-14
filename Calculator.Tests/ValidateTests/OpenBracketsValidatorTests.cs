@@ -15,7 +15,7 @@ namespace Calculator.Tests.ValidateTests
         [DataRow("9+(10*(11-12.12))")]
         [DataRow("24+1")]
         [DataRow("(24+1)+(-12.2)")]
-        public void Validate_CorrectExpresision_ReturnOkStatus(string source)
+        public void Validate_CorrectExpression_ReturnOkStatus(string source)
         {
             var bracketsValidator = new OpenedBracketsValidator();
             var result = new Result();

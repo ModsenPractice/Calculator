@@ -6,8 +6,8 @@ namespace Calculator.Services.Validators
     public class OperatorPlaceValidator : AbstractValidator
     {
         private const string WrongOperatorPlaceErrorMessage = "";
-        private const string Operators = "+*/-";
-        private const string OperatorsWithouMinus = "+*/";
+        private const string Operators = "+*/-^";
+        private const string OperatorsWithoutMinus = "+*/^";
 
         public override void Validate(string source, Result result)
         {
@@ -22,7 +22,7 @@ namespace Calculator.Services.Validators
 
         private bool IsWrongOperatorPlace(string source)
         {
-            if (OperatorsWithouMinus.Contains(source[0]) || Operators.Contains(source[^1]))
+            if (OperatorsWithoutMinus.Contains(source[0]) || Operators.Contains(source[^1]))
             {
                 return true;
             }
@@ -34,7 +34,7 @@ namespace Calculator.Services.Validators
                     return true;
                 }
 
-                if (OperatorsWithouMinus.Contains(source[i]) && source[i - 1] == '(')
+                if (OperatorsWithoutMinus.Contains(source[i]) && source[i - 1] == '(')
                 {
                     return true;
                 }

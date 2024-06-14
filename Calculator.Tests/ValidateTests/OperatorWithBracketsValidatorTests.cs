@@ -17,7 +17,7 @@ namespace Calculator.Tests.ValidateTests
         [DataRow("y-(-a)")]
         [DataRow("x+a")]
         [DataRow("(24+1)+(-12)")]
-        public void Validate_CorrectExpresision_ReturnOkStatus(string source)
+        public void Validate_CorrectExpression_ReturnOkStatus(string source)
         {
             var digitValidator = new OperatorWithBracketsValidator();
             var result = new Result();

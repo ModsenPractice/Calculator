@@ -3,17 +3,17 @@ using Calculator.Models;
 
 namespace Calculator.Services.Validators
 {
-    public class RepitableOperatorsValidator : AbstractValidator
+    public class RepeatableOperatorsValidator : AbstractValidator
     {
-        private const string RepitableOperatorsErrorMessage = "";
-        private const string Operators = "+*/-";
+        private const string RepeatableOperatorsErrorMessage = "";
+        private const string Operators = "+*/-^";
 
         public override void Validate(string source, Result result)
         {
             if (IsContainRepitableOperators(source))
             {
                 result.Status = ResultStatus.Error;
-                result.ErrorMessages.Add(RepitableOperatorsErrorMessage);
+                result.ErrorMessages.Add(RepeatableOperatorsErrorMessage);
             }
 
             base.Validate(source, result);

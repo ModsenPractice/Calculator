@@ -5,7 +5,7 @@ using Calculator.Services.Validators;
 namespace Calculator.Tests.ValidateTests
 {
     [TestClass]
-    public class RepitableOperatorsValidatorTests
+    public class RepeatableOperatorsValidatorTests
     {
         [DataTestMethod]
         [DataRow("(12+4+(24-2.12))")]
@@ -15,12 +15,12 @@ namespace Calculator.Tests.ValidateTests
         [DataRow("4-(-2.24)")]
         [DataRow("24+1.21")]
         [DataRow("(24+1.12)+(-12)")]
-        public void Validate_CorrectExpresision_ReturnOkStatus(string source)
+        public void Validate_CorrectExpression_ReturnOkStatus(string source)
         {
-            var repitableValidator = new RepitableOperatorsValidator();
+            var repeatableValidator = new RepeatableOperatorsValidator();
             var result = new Result();
 
-            repitableValidator.Validate(source, result);
+            repeatableValidator.Validate(source, result);
 
             Assert.AreEqual(ResultStatus.Ok, result.Status);
             Assert.IsTrue(result.ErrorMessages.Count == 0);
@@ -32,12 +32,12 @@ namespace Calculator.Tests.ValidateTests
         [DataRow("78**4++4")]
         [DataRow("65++2")]
         [DataRow("2--1")]
-        public void Validate_ExpressionWithRepitableOperators_ReturnErrorStatus(string source)
+        public void Validate_ExpressionWithRepeatableOperators_ReturnErrorStatus(string source)
         {
-            var repitableValidator = new RepitableOperatorsValidator();
+            var repeatableValidator = new RepeatableOperatorsValidator();
             var result = new Result();
 
-            repitableValidator.Validate(source, result);
+            repeatableValidator.Validate(source, result);
 
             Assert.AreEqual(ResultStatus.Error, result.Status);
             Assert.IsTrue(result.ErrorMessages.Count != 0);
