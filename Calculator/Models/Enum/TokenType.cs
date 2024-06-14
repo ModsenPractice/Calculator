@@ -8,13 +8,12 @@ namespace Calculator.Models.Enum
 {
     public enum TokenType
     {
-        Plus,
-        Minus,
-        Multiplication,
-        Division,
-        Power,
+        Operations,
         Operand,
         OpenPar,
-        ClosePar
+        ClosePar,
+        Function,
+        Unary,
+
     }
 }
