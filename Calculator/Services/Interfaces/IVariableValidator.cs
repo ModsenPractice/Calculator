@@ -2,9 +2,9 @@
 
 namespace Calculator.Services.Interfaces
 {
-    public interface IValidator
+    public interface IVariableValidator
     {
         void Validate(string source, Result result);
-        IValidator SetNextValidator(IValidator validator);
+        IVariableValidator SetNextValidator(IVariableValidator expressionValidator);
     }
 }

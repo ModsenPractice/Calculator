@@ -33,7 +33,7 @@ namespace Calculator
                 .GetExecutingAssembly()
                 .GetTypes();
 
-            var interfaceType = typeof(IValidator);
+            var interfaceType = typeof(IExpressionValidator);
             var implementations = types
                     .Where(type => interfaceType.IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract);
 

@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Calculator.Services.Validators.ExpressionValidators;
 
-namespace Calculator.Tests.ValidateTests
+namespace Calculator.Tests.ValidateTests.ExpressionValidatorTests
 {
-    public class DigitValidatorTests
+    public class DigitExpressionValidatorTests
     {
         [DataTestMethod]
         [DataRow("12*(25+3)")]
@@ -18,7 +19,7 @@ namespace Calculator.Tests.ValidateTests
         [DataRow("(24+1)+(-12)")]
         public void Validate_CorrectExpression_ReturnOkStatus(string source)
         {
-            var digitValidator = new DigitValidator();
+            var digitValidator = new DigitExpressionValidator();
             var result = new Result();
 
             digitValidator.Validate(source, result);
@@ -32,7 +33,7 @@ namespace Calculator.Tests.ValidateTests
         [DataRow("(-#^$)")]
         public void Validate_ExpressionWithoutDigitsOrVariables_ReturnErrorStatus(string source)
         {
-            var digitValidator = new DigitValidator();
+            var digitValidator = new DigitExpressionValidator();
             var result = new Result();
 
             digitValidator.Validate(source, result);

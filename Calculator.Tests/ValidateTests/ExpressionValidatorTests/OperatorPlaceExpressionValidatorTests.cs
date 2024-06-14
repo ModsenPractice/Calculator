@@ -1,11 +1,12 @@
 ﻿using Calculator.Models;
 using Calculator.Models.Enum;
 using Calculator.Services.Validators;
+using Calculator.Services.Validators.ExpressionValidators;
 
-namespace Calculator.Tests.ValidateTests
+namespace Calculator.Tests.ValidateTests.ExpressionValidatorTests
 {
     [TestClass]
-    public class OperatorPlaceValidatorTests
+    public class OperatorPlaceExpressionValidatorTests
     {
         [DataTestMethod]
         [DataRow("(12+4.11+(24-2.24))")]
@@ -17,7 +18,7 @@ namespace Calculator.Tests.ValidateTests
         [DataRow("(24+1)+(-12)")]
         public void Validate_CorrectExpression_ReturnOkStatus(string source)
         {
-            var operatorPlaceValidator = new OperatorPlaceValidator();
+            var operatorPlaceValidator = new OperatorPlaceExpressionValidator();
             var result = new Result();
 
             operatorPlaceValidator.Validate(source, result);
@@ -37,7 +38,7 @@ namespace Calculator.Tests.ValidateTests
         [DataRow("(/52/11)")]
         public void Validate_ExpressionWithWrongOperatorPlace_ReturnErrorStatus(string source)
         {
-            var operatorPlaceValidator = new OperatorPlaceValidator();
+            var operatorPlaceValidator = new OperatorPlaceExpressionValidator();
             var result = new Result();
 
             operatorPlaceValidator.Validate(source, result);

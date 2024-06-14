@@ -1,11 +1,11 @@
 ﻿using Calculator.Models.Enum;
 using Calculator.Models;
 
-namespace Calculator.Services.Validators
+namespace Calculator.Services.Validators.ExpressionValidators
 {
-    public class OperatorPlaceValidator : AbstractValidator
+    public class OperatorPlaceExpressionValidator : AbstractExpressionValidator
     {
-        private const string WrongOperatorPlaceErrorMessage = "";
+        private const string WrongOperatorPlaceErrorMessage = "Wrong operator place";
         private const string Operators = "+*/-^";
         private const string OperatorsWithoutMinus = "+*/^";
 

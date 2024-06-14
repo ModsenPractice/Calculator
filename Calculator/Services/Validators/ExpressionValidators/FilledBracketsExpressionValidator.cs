@@ -1,11 +1,11 @@
 ﻿using Calculator.Models.Enum;
 using Calculator.Models;
 
-namespace Calculator.Services.Validators
+namespace Calculator.Services.Validators.ExpressionValidators
 {
-    public class FilledBracketsValidator : AbstractValidator
+    public class FilledBracketsExpressionValidator : AbstractExpressionValidator
     {
-        private const string OpenedBracketsContainNothingErrorMessage = "";
+        private const string OpenedBracketsContainNothingErrorMessage = "Expression contain brackets with nothing";
 
         public override void Validate(string source, Result result)
         {

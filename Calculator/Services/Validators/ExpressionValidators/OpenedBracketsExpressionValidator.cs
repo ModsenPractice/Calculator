@@ -1,11 +1,11 @@
 ﻿using Calculator.Models;
 using Calculator.Models.Enum;
 
-namespace Calculator.Services.Validators
+namespace Calculator.Services.Validators.ExpressionValidators
 {
-    public class OpenedBracketsValidator : AbstractValidator
+    public class OpenedBracketsExpressionValidator : AbstractExpressionValidator
     {
-        private const string OpenBracketsWasntClosedErrorMessage = "";
+        private const string OpenBracketsWasntClosedErrorMessage = "Open bracket wasn't closed";
 
         public override void Validate(string source, Result result)
         {

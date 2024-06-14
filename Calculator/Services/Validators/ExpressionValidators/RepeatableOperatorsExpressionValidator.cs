@@ -1,16 +1,16 @@
 ﻿using Calculator.Models.Enum;
 using Calculator.Models;
 
-namespace Calculator.Services.Validators
+namespace Calculator.Services.Validators.ExpressionValidators
 {
-    public class RepeatableOperatorsValidator : AbstractValidator
+    public class RepeatableOperatorsExpressionValidator : AbstractExpressionValidator
     {
-        private const string RepeatableOperatorsErrorMessage = "";
+        private const string RepeatableOperatorsErrorMessage = "Operators is repeats in expression";
         private const string Operators = "+*/-^";
 
         public override void Validate(string source, Result result)
         {
-            if (IsContainRepitableOperators(source))
+            if (IsContainRepeatableOperators(source))
             {
                 result.Status = ResultStatus.Error;
                 result.ErrorMessages.Add(RepeatableOperatorsErrorMessage);
@@ -19,7 +19,7 @@ namespace Calculator.Services.Validators
             base.Validate(source, result);
         }
 
-        private bool IsContainRepitableOperators(string source)
+        private bool IsContainRepeatableOperators(string source)
         {
             for (int i = 0; i < source.Length - 1; i++)
             {

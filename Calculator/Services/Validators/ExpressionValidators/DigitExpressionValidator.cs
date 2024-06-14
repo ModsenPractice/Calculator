@@ -1,15 +1,11 @@
 ﻿using Calculator.Models.Enum;
 using Calculator.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Calculator.Services.Validators
+namespace Calculator.Services.Validators.ExpressionValidators
 {
-    public class DigitValidator : AbstractValidator
+    public class DigitExpressionValidator : AbstractExpressionValidator
     {
-        private const string DontContainDigitsOrVariableErrorException = "";
+        private const string DontContainDigitsOrVariableErrorException = "Expression contain special simbols";
 
         public override void Validate(string source, Result result)
         {

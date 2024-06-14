@@ -1,11 +1,11 @@
 ﻿using Calculator.Models;
 using Calculator.Models.Enum;
-using Calculator.Services.Validators;
+using Calculator.Services.Validators.ExpressionValidators;
 
-namespace Calculator.Tests.ValidateTests
+namespace Calculator.Tests.ValidateTests.ExpressionValidatorTests
 {
     [TestClass]
-    public class RepeatableOperatorsValidatorTests
+    public class RepeatableOperatorsExpressionValidatorTests
     {
         [DataTestMethod]
         [DataRow("(12+4+(24-2.12))")]
@@ -17,7 +17,7 @@ namespace Calculator.Tests.ValidateTests
         [DataRow("(24+1.12)+(-12)")]
         public void Validate_CorrectExpression_ReturnOkStatus(string source)
         {
-            var repeatableValidator = new RepeatableOperatorsValidator();
+            var repeatableValidator = new RepeatableOperatorsExpressionValidator();
             var result = new Result();
 
             repeatableValidator.Validate(source, result);
@@ -28,13 +28,13 @@ namespace Calculator.Tests.ValidateTests
 
         [DataTestMethod]
         [DataRow("1++24")]
-        [DataRow("24+56+1//4")]
-        [DataRow("78**4++4")]
+        [DataRow("24+/56+1/4")]
+        [DataRow("78**4-+4")]
         [DataRow("65++2")]
         [DataRow("2--1")]
         public void Validate_ExpressionWithRepeatableOperators_ReturnErrorStatus(string source)
         {
-            var repeatableValidator = new RepeatableOperatorsValidator();
+            var repeatableValidator = new RepeatableOperatorsExpressionValidator();
             var result = new Result();
 
             repeatableValidator.Validate(source, result);
