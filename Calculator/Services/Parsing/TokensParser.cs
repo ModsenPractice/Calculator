@@ -9,26 +9,34 @@ using System.Threading.Tasks;
 
 namespace Calculator.Services.Parsing
 {
-    public class TokensParser : ITokensParser
+    public class TokensParser : IParser<IEnumerable<Token>>
     {
-        private static readonly Dictionary<TokenType, int> _typePriority = new()
+        private static readonly Dictionary<string, int> _operationPriority = new()
         {
-            {TokenType.OpenPar, 1},
-            {TokenType.Plus, 2},
-            {TokenType.Minus, 2},
-            {TokenType.Multiplication, 3},
-            {TokenType.Division, 3},
-            {TokenType.Power, 4},
-            {TokenType.Unary, 5},
+            {"(", 1},
+            {"+", 2},
+            {"-", 2},
+            {"*", 3},
+            {"/", 3},
+            {"^", 4},
         };
 
-        /// <summary>
-        /// Converts collection of token into collection of tokens in infix notation in reverse polish notation
-        /// </summary>
-        /// <param name="source">Valid list of tokens in infix</param>
-        /// <returns>List of tokenst in reverse polish notation</returns>
-        public IEnumerable<Token> Parse(IEnumerable<Token> source)
+        private readonly ITokenizer _tokenizer;
+        public TokensParser(ITokenizer tokenizer)
         {
+            _tokenizer = tokenizer;
+        }
+
+
+        /// <summary>
+        /// Converts infix string into reverse polish notation collection of tokens
+        /// </summary>
+        /// <param name="input">Expression string in infix notation</param>
+        /// <returns>List of tokenst in form of reverse polish notation</returns>
+        public IEnumerable<Token> Parse(string input)
+        {
+            var source = _tokenizer.Tokenize(input);
+
             var operationStack = new Stack<Token>();
             var result = new List<Token>();
 
@@ -44,6 +52,7 @@ namespace Calculator.Services.Parsing
                     //if token is open bracket or function push token to stack
                     case TokenType.OpenPar:
                     case TokenType.Function:
+                    case TokenType.Unary:
                         operationStack.Push(token);
                         break;
 
@@ -67,14 +76,9 @@ namespace Calculator.Services.Parsing
                     //if token is operation put operations from stack to result sequence
                     //while top statck operation priority higher or equal current operation
                     //and push operation to stack
-                    case TokenType.Plus:
-                    case TokenType.Minus:
-                    case TokenType.Multiplication:
-                    case TokenType.Division:
-                    case TokenType.Power:
-                    case TokenType.Unary:
+                    case TokenType.Operations:
                         while (operationStack.Count > 0 &&
-                            _typePriority[operationStack.Peek().Type] >= _typePriority[token.Type])
+                            _operationPriority[operationStack.Peek().Value] >= _operationPriority[token.Value])
                         {
                             result.Add(operationStack.Pop());
                         }

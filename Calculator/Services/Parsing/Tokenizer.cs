@@ -20,11 +20,11 @@ namespace Calculator.Services.Parsing
         //Map known character to corresponding token types
         private static readonly Dictionary<char, TokenType> _knownCharTokenType = new()
         {
-            { '+', TokenType.Plus },
-            { '-', TokenType.Minus },
-            { '/', TokenType.Division },
-            { '*', TokenType.Multiplication },
-            { '^', TokenType.Power },
+            { '+', TokenType.Operations },
+            { '-', TokenType.Operations },
+            { '/', TokenType.Operations },
+            { '*', TokenType.Operations },
+            { '^', TokenType.Operations },
             { '(', TokenType.OpenPar },
             { ')', TokenType.ClosePar },
         };

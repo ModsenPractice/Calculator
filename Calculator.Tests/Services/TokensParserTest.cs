@@ -13,59 +13,44 @@ namespace Calculator.Tests.Services
     [TestClass]
     public class TokensParserTest
     {
-        private readonly ITokensParser _parser;
+        private readonly IParser<IEnumerable<Token>> _parser;
         public TokensParserTest()
         {
-            _parser = new TokensParser();    
+            var tokenizer = new Tokenizer();
+            _parser = new TokensParser(tokenizer);    
         }
 
         [TestMethod]
         public void ParseSingleOperand()
         {
-            //512.612
-            IEnumerable<Token> toParse = [
+            var result = _parser.Parse("512.612");
+
+            IEnumerable<Token> expectedResult = [
                 new(TokenType.Operand, "512.612"),
             ];
 
-            var result = _parser.Parse(toParse);
-
-            CollectionAssert.AreEqual(toParse.ToArray(), result.ToArray());
+            CollectionAssert.AreEqual(expectedResult.ToArray(), result.ToArray());
         }
 
         [TestMethod]
         public void ParseBasicOperations()
         {
-            //2+2-2/2*2^2
-            IEnumerable<Token> toParse = [
-                new(TokenType.Operand, "2"),
-                new(TokenType.Plus, "+"),
-                new(TokenType.Operand, "2"),
-                new(TokenType.Minus, "-"),
-                new(TokenType.Operand, "2"),
-                new(TokenType.Division, "/"),
-                new(TokenType.Operand, "2"),
-                new(TokenType.Multiplication, "*"),
-                new(TokenType.Operand, "2"),
-                new(TokenType.Power, "^"),
-                new(TokenType.Operand, "2"),
-            ];
-
-            var result = _parser.Parse(toParse);
+            var result = _parser.Parse("2+2-2/2*2^2");
 
             //22+22/22^*-
             IEnumerable<Token> expectedResult =
             [
                 new(TokenType.Operand, "2"),
                 new(TokenType.Operand, "2"),
-                new(TokenType.Plus, "+"),
+                new(TokenType.Operations, "+"),
                 new(TokenType.Operand, "2"),
                 new(TokenType.Operand, "2"),
-                new(TokenType.Division, "/"),
+                new(TokenType.Operations, "/"),
                 new(TokenType.Operand, "2"),
                 new(TokenType.Operand, "2"),
-                new(TokenType.Power, "^"),
-                new(TokenType.Multiplication, "*"),
-                new(TokenType.Minus, "-"),
+                new(TokenType.Operations, "^"),
+                new(TokenType.Operations, "*"),
+                new(TokenType.Operations, "-"),
             ];
 
             CollectionAssert.AreEqual(expectedResult.ToArray(), result.ToArray());
@@ -74,29 +59,7 @@ namespace Calculator.Tests.Services
         [TestMethod]
         public void ParseComplexExpression()
         {
-            //1.2+(22.2-333)*4444/55555*sin(2+5)
-            IEnumerable<Token> toParse = [
-                new(TokenType.Operand, "1.2"),
-                new(TokenType.Plus, "+"),
-                new(TokenType.OpenPar, "("),
-                new(TokenType.Operand, "22.2"),
-                new(TokenType.Minus, "-"),
-                new(TokenType.Operand, "333"),
-                new(TokenType.ClosePar, ")"),
-                new(TokenType.Multiplication, "*"),
-                new(TokenType.Operand, "4444"),
-                new(TokenType.Division, "/"),
-                new(TokenType.Operand, "55555"),
-                new(TokenType.Multiplication, "*"),
-                new(TokenType.Function, "sin"),
-                new(TokenType.OpenPar, "("),
-                new(TokenType.Operand, "2"),
-                new(TokenType.Plus, "+"),
-                new(TokenType.Operand, "5"),
-                new(TokenType.ClosePar, ")"),
-            ];
-
-            var result = _parser.Parse(toParse);
+            var result = _parser.Parse("1.2+(22.2-333)*4444/55555*sin(2+5)");
 
             //1.2 22.2 333 - 4444 * 55555 / 2 5 + sin * +
             IEnumerable<Token> expectedResult =
@@ -104,17 +67,17 @@ namespace Calculator.Tests.Services
                 new(TokenType.Operand, "1.2"),
                 new(TokenType.Operand, "22.2"),
                 new(TokenType.Operand, "333"),
-                new(TokenType.Minus, "-"),
+                new(TokenType.Operations, "-"),
                 new(TokenType.Operand, "4444"),
-                new(TokenType.Multiplication, "*"),
+                new(TokenType.Operations, "*"),
                 new(TokenType.Operand, "55555"),
-                new(TokenType.Division, "/"),
+                new(TokenType.Operations, "/"),
                 new(TokenType.Operand, "2"),
                 new(TokenType.Operand, "5"),
-                new(TokenType.Plus, "+"),
+                new(TokenType.Operations, "+"),
                 new(TokenType.Function, "sin"),
-                new(TokenType.Multiplication, "*"),
-                new(TokenType.Plus, "+"),
+                new(TokenType.Operations, "*"),
+                new(TokenType.Operations, "+"),
             ];
 
             CollectionAssert.AreEqual(expectedResult.ToArray(), result.ToArray());
@@ -123,20 +86,7 @@ namespace Calculator.Tests.Services
         [TestMethod]
         public void ParseMultipleUnary()
         {
-            //-1.2+(+22.2)+5
-            IEnumerable<Token> toParse = [
-                new(TokenType.Unary, "-"),
-                new(TokenType.Operand, "1.2"),
-                new(TokenType.Plus, "+"),
-                new(TokenType.OpenPar, "("),
-                new(TokenType.Unary, "+"),
-                new(TokenType.Operand, "22.2"),
-                new(TokenType.ClosePar, ")"),
-                new(TokenType.Plus, "+"),
-                new(TokenType.Operand, "5"),
-            ];
-
-            var result = _parser.Parse(toParse);
+            var result = _parser.Parse("-1.2+(+22.2)+5");
 
             IEnumerable <Token> expectedResult =
             [
@@ -144,9 +94,9 @@ namespace Calculator.Tests.Services
                 new(TokenType.Unary, "-"),
                 new(TokenType.Operand, "22.2"),
                 new(TokenType.Unary, "+"),
-                new(TokenType.Plus, "+"),
+                new(TokenType.Operations, "+"),
                 new(TokenType.Operand, "5"),
-                new(TokenType.Plus, "+"),
+                new(TokenType.Operations, "+"),
             ];
 
             CollectionAssert.AreEqual(expectedResult.ToArray(), result.ToArray());
@@ -155,35 +105,17 @@ namespace Calculator.Tests.Services
         [TestMethod]
         public void ParseNestedFunctions()
         {
-            //sin(cos(2+5)/ln(3))
-            IEnumerable<Token> toParse = [
-                new(TokenType.Function, "sin"),
-                new(TokenType.OpenPar, "("),
-                new(TokenType.Function, "cos"),
-                new(TokenType.OpenPar, "("),
-                new(TokenType.Operand, "2"),
-                new(TokenType.Plus, "+"),
-                new(TokenType.Operand, "5"),
-                new(TokenType.ClosePar, ")"),
-                new(TokenType.Division, "/"),
-                new(TokenType.Function, "ln"),
-                new(TokenType.OpenPar, "("),
-                new(TokenType.Operand, "3"),
-                new(TokenType.ClosePar, ")"),
-                new(TokenType.ClosePar, ")"),
-            ];
-
-            var result = _parser.Parse(toParse);
+            var result = _parser.Parse("sin(cos(2+5)/ln(3))");
 
             IEnumerable<Token> expectedResult =
             [
                 new(TokenType.Operand, "2"),
                 new(TokenType.Operand, "5"),
-                new(TokenType.Plus, "+"),
+                new(TokenType.Operations, "+"),
                 new(TokenType.Function, "cos"),
                 new(TokenType.Operand, "3"),
                 new(TokenType.Function, "ln"),
-                new(TokenType.Division, "/"),
+                new(TokenType.Operations, "/"),
                 new(TokenType.Function, "sin"),
             ];
 
