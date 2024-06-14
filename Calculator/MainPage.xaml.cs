@@ -2,52 +2,63 @@
 using System;
 using System.Text;
 using Calculator.Services.Interfaces;
+using System.Collections;
+using System.Collections.ObjectModel;
 namespace Calculator
 {
     public partial class MainPage : ContentPage
     {
-        string expression;
-        string calculationResult;
-        public List<string> Functions { get; set; }
-        public List<string> Variables { get; set; }
+        
+        
+        ObservableCollection<string> functionsUser;
+        ObservableCollection<string> variables;
         public MainPage()
         {
+            
             InitializeComponent();
+
             OnClear(this, null);
-            Functions = new List<string> { "f(x,y)=sqrt(2)+2-4+8", "f1(x,y)=x^(2)+15-7", "f2(x,y)=(pi*2/4)*180"};
-            //Variables = new List<string> { "pi=3.14", "x=5", "y=8" };
-            variablesList.ItemsSource = new List<string> { "pi=3.14", "x=5", "y=8" };
+
+            this.functionsUser = new ObservableCollection<string> ();
+            functionsUserList.ItemsSource = this.functionsUser;
+
+            functionsBuiltList.ItemsSource = new List<string> { "sin(x)", "cos(x)", "tg(x)", "ln(x)", "log(y,x)", "exp(x)" };
+
+            this.variables = new ObservableCollection<string> ();
+            variablesList.ItemsSource = this.variables; 
+
             BindingContext = this;
+            
         }
+
         private void variablesList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            selected.Text = $"Выбрано: {e.SelectedItem}";
+            this.entryVariable.Text = e.SelectedItem.ToString();
         }
+
+        private void functionsUserList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            this.entryFunction.Text = e.SelectedItem.ToString();
+        }
+
+        private void functionsBuiltList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            this.entryFunction.Text = e.SelectedItem.ToString();
+        }
+
         private void OnClear(object sender, EventArgs e)
         {
-            this.result.Text = "0"; 
+            this.result.Text = ""; 
         }
 
         private void OnMove(object sender, EventArgs e)
         {
         }
 
-        private void OnDelete(object sender, EventArgs e)
-        {
-            if (this.result.Text != string.Empty)
-                this.result.Text = this.result.Text.Substring(0, this.result.Text.Length - 1);
-            else
-                OnClear(this, null);
-
-        }
-
         private void OnSpecificSymbol(object sender, EventArgs e)
         {
             Button button = (Button)sender;
             string btnPressed = button.Text;
-
-            if (this.result.Text == "0")
-                this.result.Text = string.Empty;
              
             switch(btnPressed)
             {
@@ -71,27 +82,82 @@ namespace Calculator
             Button button = (Button)sender;
             string btnPressed = button.Text;
 
-            if (this.result.Text == "0")
-                this.result.Text = string.Empty;
-
             this.result.Text += btnPressed;
         }
 
-        private void OnCalculate(object sender, EventArgs e)
+        async private void OnCalculate(object sender, EventArgs e)
         {
             Button button = (Button)sender;
-            expression = this.result.Text;
-            this.result.Text = calculationResult;
+            if (this.result.Text == "")
+                this.result.Text = "0";
+            // else if(Validate(this.result.Text) = Ok);
+            // this.result.Text = Calculate
+            // else
+            //await this.DisplayAlert("Validation error",( Validate(this.result.Text).Error), "Exite");
         }
 
-        async void OnVariable(object sender, EventArgs e)
+        async private void OnAddFunction(object sender, EventArgs e)
         {
-
+            Button button = (Button)sender;
+            if (this.entryFunction.Text != null)
+            {
+                functionsUser.Add(this.entryFunction.Text);
+                // if(Validate(this.entryFunction.Text) = Ok);
+                // Add function
+                // else
+                //await this.DisplayAlert("Validation error",( Validate(this.entryFunction.Text).Error), "Exite"); 
+            }
         }
 
-        async void OnFunction(object sender, EventArgs e)
+        async private void OnAddVariable(object sender, EventArgs e)
         {
+            Button button = (Button)sender;
+            if (this.entryVariable.Text != null) 
+            {
+                variables.Add(this.entryVariable.Text);
+                
+                // if(Validate(this.entryVariable.Text) = Ok);
+                // Add function
+                // else
+                //await this.DisplayAlert("Validation error",( Validate(this.entryVariable.Text).Error), "Exite"); 
+            }
+        }
 
+        private void OnDeleteFunction(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            if (this.entryFunction.Text != null)
+                functionsUser.Remove(this.entryFunction.Text);
+            //Delete function 
+        }
+
+        private void OnDeleteVariable(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            if (this.entryVariable.Text != null)
+                variables.Remove(this.entryVariable.Text);
+            //Delete variable 
+        }
+
+        private void OnUseVariable(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            if (this.entryVariable.Text != null)
+                this.result.Text += this.entryVariable.Text.Substring(0, this.entryVariable.Text.IndexOf('='));
+        }
+
+        private void OnUserFunction(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            if (this.entryFunction.Text != null && this.entryFunction.Text.Contains('='))
+                this.result.Text += this.entryFunction.Text.Substring(0, this.entryFunction.Text.IndexOf('='));
+        }
+
+        private void OnBuiltFunction(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            if (this.entryFunction.Text != null && !this.entryFunction.Text.Contains('='))
+                this.result.Text += this.entryFunction.Text;
         }
     }
 

@@ -2,114 +2,130 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Calculator.MainPage">
-    
+
     <Grid Padding="5" RowSpacing="5" ColumnSpacing="5"
           RowDefinitions="*"
           ColumnDefinitions="*,*">
-        
-        <Grid BackgroundColor="Gray" Padding="5" RowSpacing="5" ColumnSpacing="5" Grid.Row="0" Grid.Column="0"
-          RowDefinitions="2*,*,*,*,*,*,*,*,*"
-          ColumnDefinitions="*,*,*,*">
 
-            <Label
+        <Grid BackgroundColor="Gray" Padding="5" RowSpacing="5" ColumnSpacing="5" Grid.Row="0" Grid.Column="0"
+              RowDefinitions="2*,*,*,*,*,*,*,*"
+              ColumnDefinitions="*,*,*,*">
+
+            <Entry 
             x:Name="result"
             Grid.ColumnSpan="4"
             BackgroundColor="White"
             FontAttributes="Bold"
             FontSize="48"
             HorizontalTextAlignment="End"
-            LineBreakMode="NoWrap"
             Text="0"
             TextColor="Black"
-            VerticalTextAlignment="Center">
+            VerticalTextAlignment="Center"/>
 
-            </Label>
+
 
             <Button BackgroundColor="LightGray" Text="C" Grid.Row="1" Grid.Column="0" Clicked="OnClear"/>
-            <Button BackgroundColor="LightGray" Text="Left" Grid.Row="1" Grid.Column="1" Clicked="OnMove"/>
-            <Button BackgroundColor="LightGray" Text="Right" Grid.Row="1" Grid.Column="2" Clicked="OnMove"/>
-            <Button BackgroundColor="LightGray" Text="delete" Grid.Row="1" Grid.Column="3" Clicked="OnDelete"/>
+            <Button BackgroundColor="LightGray" Text="sqrt" Grid.Row="1" Grid.Column="1" Clicked="OnSpecificSymbol"/>
+            <Button BackgroundColor="LightGray" Text="^n" Grid.Row="1" Grid.Column="2" Clicked="OnSpecificSymbol"/>
 
-            <Button BackgroundColor="LightGray" Text="sqrt" Grid.Row="2" Grid.Column="0" Clicked="OnSpecificSymbol"/>
-            <Button BackgroundColor="LightGray" Text="^n" Grid.Row="2" Grid.Column="1" Clicked="OnSpecificSymbol"/>
-            <Button BackgroundColor="LightGray" Text="var" Grid.Row="2" Grid.Column="2" Clicked="OnVariable"/>
-            <Button BackgroundColor="LightGray" Text="func" Grid.Row="2" Grid.Column="3" Clicked="OnFunction"/>
+            <Button BackgroundColor="LightGray" Text="(" Grid.Row="2" Grid.Column="0" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text=")" Grid.Row="2" Grid.Column="1" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="^2" Grid.Row="2" Grid.Column="2" Clicked="OnSpecificSymbol"/>
+            <Button BackgroundColor="LightGray" Text="/" Grid.Row="2" Grid.Column="3" Clicked="OnSymbol"/>
 
-            <Button BackgroundColor="LightGray" Text="(" Grid.Row="3" Grid.Column="0" Clicked="OnSymbol"/>
-            <Button BackgroundColor="LightGray" Text=")" Grid.Row="3" Grid.Column="1" Clicked="OnSymbol"/>
-            <Button BackgroundColor="LightGray" Text="^2" Grid.Row="3" Grid.Column="2" Clicked="OnSpecificSymbol"/>
-            <Button BackgroundColor="LightGray" Text="/" Grid.Row="3" Grid.Column="3" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="7"  Grid.Row="3" Grid.Column="0" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="8" Grid.Row="3" Grid.Column="1" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="9" Grid.Row="3" Grid.Column="2" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="*" Grid.Row="3" Grid.Column="3" Clicked="OnSymbol"/>
 
-            <Button BackgroundColor="LightGray" Text="7"  Grid.Row="4" Grid.Column="0" Clicked="OnSymbol"/>
-            <Button BackgroundColor="LightGray" Text="8" Grid.Row="4" Grid.Column="1" Clicked="OnSymbol"/>
-            <Button BackgroundColor="LightGray" Text="9" Grid.Row="4" Grid.Column="2" Clicked="OnSymbol"/>
-            <Button BackgroundColor="LightGray" Text="*" Grid.Row="4" Grid.Column="3" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="4" Grid.Row="4" Grid.Column="0" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="5" Grid.Row="4" Grid.Column="1" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="6" Grid.Row="4" Grid.Column="2" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="-" Grid.Row="4" Grid.Column="3" Clicked="OnSymbol"/>
 
-            <Button BackgroundColor="LightGray" Text="4" Grid.Row="5" Grid.Column="0" Clicked="OnSymbol"/>
-            <Button BackgroundColor="LightGray" Text="5" Grid.Row="5" Grid.Column="1" Clicked="OnSymbol"/>
-            <Button BackgroundColor="LightGray" Text="6" Grid.Row="5" Grid.Column="2" Clicked="OnSymbol"/>
-            <Button BackgroundColor="LightGray" Text="-" Grid.Row="5" Grid.Column="3" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="1" Grid.Row="5" Grid.Column="0" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="2" Grid.Row="5" Grid.Column="1" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="3" Grid.Row="5" Grid.Column="2" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="+" Grid.Row="5" Grid.Column="3" Clicked="OnSymbol"/>
 
-            <Button BackgroundColor="LightGray" Text="1" Grid.Row="6" Grid.Column="0" Clicked="OnSymbol"/>
-            <Button BackgroundColor="LightGray" Text="2" Grid.Row="6" Grid.Column="1" Clicked="OnSymbol"/>
-            <Button BackgroundColor="LightGray" Text="3" Grid.Row="6" Grid.Column="2" Clicked="OnSymbol"/>
-            <Button BackgroundColor="LightGray" Text="+" Grid.Row="6" Grid.Column="3" Clicked="OnSymbol"/>
-
-            <Button BackgroundColor="LightGray" Text="(-)" Grid.Row="7" Grid.Column="0" Clicked="OnSymbol"/>
-            <Button BackgroundColor="LightGray" Text="0" Grid.Row="7" Grid.Column="1" Clicked="OnSymbol"/>
-            <Button BackgroundColor="LightGray" Text="." Grid.Row="7" Grid.Column="2" Clicked="OnSymbol"/>
-            <Button BackgroundColor="LightGray" Text="=" Grid.Row="7" Grid.Column="3" Clicked="OnCalculate"/>
+            <Button BackgroundColor="LightGray" Text="(-)" Grid.Row="6" Grid.Column="0" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="0" Grid.Row="6" Grid.Column="1" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="." Grid.Row="6" Grid.Column="2" Clicked="OnSymbol"/>
+            <Button BackgroundColor="LightGray" Text="=" Grid.Row="6" Grid.Column="3" Clicked="OnCalculate"/>
         </Grid>
 
         <Grid  Padding="5" RowSpacing="5" ColumnSpacing="5" Grid.Row="0" Grid.Column="1"
-        RowDefinitions="*,*"
-        ColumnDefinitions="*">
+               RowDefinitions="*,*"
+               ColumnDefinitions="*">
 
             <Grid BackgroundColor="Gray" Padding="5" RowSpacing="5" ColumnSpacing="5" Grid.Row="0" Grid.Column="0"
-          RowDefinitions="*,4*,*"
-          ColumnDefinitions="*">
-    
+                  RowDefinitions="*,4*,*"
+                  ColumnDefinitions="*,*">
+
                 <Entry x:Name="entryFunction"
                   Placeholder="Enter function"
                   BackgroundColor="White"
+                  Grid.ColumnSpan="2"
                   TextColor="Black"
                   FontAttributes="Bold"/>
 
 
                 <ScrollView Grid.Row="1" Grid.Column="0">
 
-                    <StackLayout>
-                        <ListView ItemsSource="{Binding Functions}" />
+                    <StackLayout Padding="7">
+                        <ListView x:Name="functionsUserList" ItemSelected="functionsUserList_ItemSelected" />
                     </StackLayout>
+
                 </ScrollView>
-                
-                <Button BackgroundColor="LightGreen" Text="Add function" Grid.Row="2" Grid.Column="0"/>
-                
+
+                <ScrollView Grid.Row="1" Grid.Column="1">
+
+                    <StackLayout Padding="7">
+                        <ListView x:Name="functionsBuiltList" ItemSelected="functionsBuiltList_ItemSelected" />
+                    </StackLayout>
+
+                </ScrollView>
+
+                <HorizontalStackLayout Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="0">
+                    <Button Margin="1" BackgroundColor="LightGreen" Text="Add function"  Clicked="OnAddFunction"/>
+                    <Button Margin="1" BackgroundColor="LightGreen" Text="Delete function"  Clicked="OnDeleteFunction"/>
+                    <Button Margin="1" BackgroundColor="LightGreen" Text="User function"  Clicked="OnUserFunction"/>
+                    <Button Margin="1" BackgroundColor="LightGreen" Text="Built-in function"  Clicked="OnBuiltFunction"/>
+                </HorizontalStackLayout>
+
 
             </Grid>
 
             <Grid BackgroundColor="Gray" Padding="5" RowSpacing="5" ColumnSpacing="5" Grid.Row="1" Grid.Column="0"
-RowDefinitions="*,4*,*"
-ColumnDefinitions="*">
+                  RowDefinitions="*,4*,*"
+                  ColumnDefinitions="*">
 
                 <Entry x:Name="entryVariable"
-        Placeholder="Enter variable"
-        BackgroundColor="White"
-        TextColor="Black"
-        FontAttributes="Bold"/>
+                Placeholder="Enter variable"
+                BackgroundColor="White"
+                TextColor="Black"
+                FontAttributes="Bold"/>
 
                 <ScrollView Grid.Row="1" Grid.Column="0">
+
+                    <StackLayout Padding="7">
+                        
+                        <ListView x:Name="variablesList" ItemSelected="variablesList_ItemSelected" />
+                        
+                    </StackLayout>
                     
-                <StackLayout Padding="7">
-                    <Label x:Name="selected"/>
-                    <ListView x:Name="variablesList" ItemSelected="variablesList_ItemSelected" />
-                </StackLayout>
-                </ScrollView> 
-                <Button BackgroundColor="LightGreen" Text="Add variable" Grid.Row="2" Grid.Column="0"/>
-                
+                </ScrollView>
+
+                <HorizontalStackLayout Grid.Row="2" Grid.Column="0">
+                    <Button Margin="1" BackgroundColor="LightGreen" Text="Add variable"  Clicked="OnAddVariable"/>
+                    <Button Margin="1" BackgroundColor="LightGreen" Text="Delete variable"  Clicked="OnDeleteVariable"/>
+                    <Button Margin="1" BackgroundColor="LightGreen" Text="Use function"  Clicked="OnUseVariable"/>
+                </HorizontalStackLayout>
+
             </Grid>
 
         </Grid>
+        
     </Grid>
 
 </ContentPage>
