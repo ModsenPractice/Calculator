@@ -9,6 +9,10 @@ namespace Calculator.Services.Interfaces
 {
     public interface IValidatorManager
     {
-        Result Validate(string source);
+        Result ValidateExpression(string source);
+
+        Result ValidateFunction(string source);
+
+        Result ValidateVariable(string source);
     }
 }
