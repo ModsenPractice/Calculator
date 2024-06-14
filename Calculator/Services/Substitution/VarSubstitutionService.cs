@@ -17,17 +17,14 @@ public class VarSubstitutionService : ISubstitutionService
     public async Task<string> ReplaceAsync(string source)
     {
         List<Variable> variableList = (await _repostiory.GetVariablesAsync()).ToList(); 
-        string pattern = @"(\w+)"; 
+        string pattern = @"\b(\w+)\b(?!\()"; 
         MatchCollection matches = Regex.Matches(source, pattern); 
-
+        
         foreach(Match match in matches){ 
             string variableName = match.Groups[1].Value; 
             Variable? variable = variableList.Find(v => v.Name == variableName); 
             if(variable!=null){ 
-                source = source.Replace(variableName, variable.Value); 
-            }
-            else{
-                Console.WriteLine($"Cannot find {variableName}"); 
+                source = Regex.Replace(source, @"\b" + variable.Name + @"\b(?!\()", variable.Value); 
             }
         }
 

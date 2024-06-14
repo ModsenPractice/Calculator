@@ -16,10 +16,54 @@ namespace Calculator.Tests
         }
 
         [TestMethod]
-        public async Task ChangeSymbols()
+        public async Task VariableWith2andMoreLetters(){ 
+            string result = await _substitutionService.ReplaceAsync("qwe"); 
+            string expectedResult = "33";
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
+
+        [TestMethod]
+        public async Task VariableWithNumbers(){ 
+            string result = await _substitutionService.ReplaceAsync("qwe23"); 
+            string expectedResult = "78";
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestMethod]
+        public async Task WhenVariableContainsOtherVariable()
         {
-            string result = await _substitutionService.ReplaceAsync("x+y"); 
-            string expectedResult = "12+36";
+            string result = await _substitutionService.ReplaceAsync("x+ax"); 
+            string expectedResult = "12+58";
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestMethod]
+        public async Task WithFunction()
+        {
+            string result = await _substitutionService.ReplaceAsync("f(x,y)"); 
+            string expectedResult = "f(12,36)";
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestMethod]
+        public async Task WithFunctionLikeVariable()
+        {
+            string result = await _substitutionService.ReplaceAsync("ax(x,y)"); 
+            string expectedResult = "ax(12,36)";
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestMethod]
+        public async Task WithEverything()
+        {
+            string result = await _substitutionService.ReplaceAsync("f(x,y)*12-ax(x,ax)+qwe23*qwe"); 
+            string expectedResult = "f(12,36)*12-ax(12,58)+78*33";
 
             Assert.AreEqual(expectedResult, result);
         }
