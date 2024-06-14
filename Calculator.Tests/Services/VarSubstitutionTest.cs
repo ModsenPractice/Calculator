@@ -90,7 +90,7 @@ namespace Calculator.Tests
                         Value="78"
                     },
                     new (){
-                        Name = "qw", 
+                        Name = "qwe", 
                         Value="33"
                     }
                 };
