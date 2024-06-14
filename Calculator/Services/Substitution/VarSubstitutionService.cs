@@ -16,7 +16,7 @@ public class VarSubstitutionService : ISubstitutionService
 
     public async Task<string> ReplaceAsync(string source)
     {
-        List<Variable> variableList = (await _repostiory.GetVariablesAsync()).ToList(); 
+        var variableList = (await _repostiory.GetVariablesAsync()).ToList(); 
         string pattern = @"\b(\w+)\b(?!\()"; 
         MatchCollection matches = Regex.Matches(source, pattern); 
         
