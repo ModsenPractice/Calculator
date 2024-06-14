@@ -2,13 +2,14 @@
 using Calculator.Models.Enum;
 using Calculator.Services.Interfaces;
 using Calculator.Services.Parsing;
+using Calculator.Services.Parsing.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Calculator.Tests.Services
+namespace Calculator.Tests.Services.Parsing
 {
     [TestClass]
     public class TokensParserTest
@@ -17,7 +18,7 @@ namespace Calculator.Tests.Services
         public TokensParserTest()
         {
             var tokenizer = new Tokenizer();
-            _parser = new TokensParser(tokenizer);    
+            _parser = new TokensParser(tokenizer);
         }
 
         [TestMethod]
@@ -88,7 +89,7 @@ namespace Calculator.Tests.Services
         {
             var result = _parser.Parse("-1.2+(+22.2)+5");
 
-            IEnumerable <Token> expectedResult =
+            IEnumerable<Token> expectedResult =
             [
                 new(TokenType.Operand, "1.2"),
                 new(TokenType.Unary, "-"),

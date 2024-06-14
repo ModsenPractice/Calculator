@@ -2,20 +2,20 @@
 using Calculator.Models.Enum;
 using Calculator.Services.Exceptions;
 using Calculator.Services.Interfaces;
-using Calculator.Services.Parsing;
+using Calculator.Services.Parsing.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Calculator.Tests.Services
+namespace Calculator.Tests.Services.Parsing
 {
     [TestClass]
     public class TokenizerUnitTest
     {
         private readonly ITokenizer _tokenizer;
-        public TokenizerUnitTest() 
+        public TokenizerUnitTest()
         {
             _tokenizer = new Tokenizer();
         }

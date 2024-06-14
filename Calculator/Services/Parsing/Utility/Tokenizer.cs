@@ -3,7 +3,7 @@ using Calculator.Models.Enum;
 using Calculator.Services.Exceptions;
 using Calculator.Services.Interfaces;
 
-namespace Calculator.Services.Parsing
+namespace Calculator.Services.Parsing.Utility
 {
     public class Tokenizer : ITokenizer
     {
