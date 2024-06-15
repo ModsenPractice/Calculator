@@ -9,5 +9,6 @@ namespace Calculator.Models.Enum
     public enum ResultStatus
     {
         Ok,
+        Error
     }
 }

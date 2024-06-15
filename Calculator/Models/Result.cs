@@ -9,7 +9,7 @@ namespace Calculator.Models
 {
     public class Result
     {
-        public ResultStatus Status { get; set; }
-        public string? ErrorMessage { get; set; }
+        public ResultStatus Status { get; set; } = ResultStatus.Ok;
+        public List<string> ErrorMessages { get; set; } = [];
     }
 }
