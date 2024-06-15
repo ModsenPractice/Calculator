@@ -1,5 +1,4 @@
-﻿using Calculator.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Calculator.Services.Interfaces
 {
-    public interface ITokensParser
+    public interface IParser<T>
     {
-        IEnumerable<Token> Parse(IEnumerable<Token> source);
+        T Parse(string input);
     }
 }
