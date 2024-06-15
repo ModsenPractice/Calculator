@@ -1,9 +1,12 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Calculator.Services.Interfaces;
+using Calculator.ViewModels.Interfaces;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -13,7 +16,24 @@ namespace Calculator.ViewModels
 {
     public partial class MainViewModel : INotifyPropertyChanged
     {
+        private readonly IValidatorManager _validator;
+        private readonly IAlertService _alert;
+
+        //Not sure if it should be here but whatever
+        private static readonly Dictionary<string, string> _actionReplacements = new Dictionary<string, string>()
+        {
+            { "sqrt", "sqrt(" },
+            { "sin", "sin(" },
+            { "cos", "cos(" },
+            { "exp", "exp(" },
+            { "ln", "ln(" },
+            { "^2", "^(2)" },
+            { "^n", "^(" },
+        };
+
+        
         private string _result = "";
+        private int _currentPos = 0;
 
         public string Result
         {
@@ -28,35 +48,39 @@ namespace Calculator.ViewModels
             }
         }
 
+        public int CurrentPos
+        {
+            get => _currentPos;
+            set
+            {
+                if (_currentPos != value)
+                {
+                    _currentPos = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public ObservableCollection<string> Functions { get; set; }
         public ObservableCollection<string> Variables { get; set; }
 
-        public MainViewModel()
+        public MainViewModel(IValidatorManager validator, IAlertService alert)
         {
+            _validator = validator;
+            _alert = alert;
+
             Functions = new ObservableCollection<string>();
             Variables = new ObservableCollection<string>();
         }
 
+        #region Input commands
+
         [RelayCommand]
         void AddSymbol(string symbol)
         {
-            Result += symbol;
-        }
-
-        [RelayCommand]
-        void AddSpecificSymbol(string symbol)
-        {
-            switch (symbol)
+            if(_actionReplacements.ContainsKey(symbol))
             {
-                case "sqrt":
-                    symbol = "sqrt(";
-                    break;
-                case "^2":
-                    symbol = "^(2)";
-                    break;
-                case "^n":
-                    symbol = "^(";
-                    break;
+                symbol = _actionReplacements[symbol];
             }
 
             Result += symbol;
@@ -81,18 +105,29 @@ namespace Calculator.ViewModels
         }
 
         [RelayCommand]
+        void RemoveLast()
+        {
+            if(Result.Length != 0)
+            {
+                Result = Result.Remove(Result.Length - 1);
+            }
+        }
+
+        #endregion
+
+        #region Function commands
+
+        [RelayCommand]
         async Task AddFunction(string value)
         {
-            //Button button = (Button)sender;
-            //if (this.entryFunction.Text != null)
-            //{
-            //    //functionsUser.Add(this.entryFunction.Text);
-            //    // if(Validate(this.entryFunction.Text) = Ok);
-            //    // Add function
-            //    // else
-            //    //await this.DisplayAlert("Validation error",( Validate(this.entryFunction.Text).Error), "Exite"); 
-            //}
+            var validationResult = _validator.ValidateFunction(value);
+            if (validationResult.Status == Models.Enum.ResultStatus.Error)
+            {
+                await _alert.DisplayErrorAsync(validationResult.ErrorMessages);
+                return;
+            }
 
+            //Add repo
             Functions.Add(value);
 
             await Task.CompletedTask;
@@ -106,10 +141,6 @@ namespace Calculator.ViewModels
         [RelayCommand]
         async Task DeleteFunction(object obj)
         {
-            //    Button button = (Button)sender;
-            //    if (this.entryFunction.Text != null)
-            //        functionsUser.Remove(this.entryFunction.Text);
-            //Delete function 
             if (obj is not string expression) return;
 
             var res = Functions.Remove(expression);
@@ -125,29 +156,32 @@ namespace Calculator.ViewModels
         [RelayCommand]
         void UseFunction(object obj)
         {
-            //if (this.entryVariable.Text != null)
-            //    this.result.Text += this.entryVariable.Text.Substring(0, this.entryVariable.Text.IndexOf('='));
             if (obj is not string expression) return;
 
-            Result += expression.Substring(0, expression.IndexOf('='));
+            var prevPos = CurrentPos;
+            var name = expression.Substring(0, expression.IndexOf('='));
+
+            Result = Result
+                .Insert(CurrentPos, name);
+
+            CurrentPos = prevPos + name.Length;
         }
 
+        #endregion
 
+        #region Variable commands
 
         [RelayCommand]
         async Task OnAddVariable(string value)
         {
-            //Button button = (Button)sender;
-            //if (this.entryVariable.Text != null)
-            //{
-            //    variables.Add(this.entryVariable.Text);
+            var validationResult = _validator.ValidateVariable(value);
+            if (validationResult.Status == Models.Enum.ResultStatus.Error)
+            {
+                await _alert.DisplayErrorAsync(validationResult.ErrorMessages);
+                return;
+            }
 
-                // if(Validate(this.entryVariable.Text) = Ok);
-                // Add function
-                // else
-                //await this.DisplayAlert("Validation error",( Validate(this.entryVariable.Text).Error), "Exite"); 
-            //}
-
+            //Add repo
             Variables.Add(value);
 
             await Task.CompletedTask;
@@ -161,12 +195,9 @@ namespace Calculator.ViewModels
         [RelayCommand]
         async Task OnDeleteVariable(object obj)
         {
-            //Button button = (Button)sender;
-            //if (this.entryVariable.Text != null)
-            //    variables.Remove(this.entryVariable.Text);
-            //Delete variable 
             if (obj is not string name) return;
 
+            //Add repo
             var res = Variables.Remove(name);
 
             await Task.CompletedTask;
@@ -180,13 +211,17 @@ namespace Calculator.ViewModels
         [RelayCommand]
         void UseVariable(object obj)
         {
-            //if (this.entryVariable.Text != null)
-            //    this.result.Text += this.entryVariable.Text.Substring(0, this.entryVariable.Text.IndexOf('='));
             if (obj is not string expression) return;
 
-            Result += expression.Split('=')[0];
+            var prevPos = CurrentPos;
+            var name = expression.Split('=')[0];
+
+            Result = Result.Insert(prevPos, name);
+
+            CurrentPos = prevPos + name.Length;
         }
 
+        #endregion
 
         #region INotifyPropertyChanged
 

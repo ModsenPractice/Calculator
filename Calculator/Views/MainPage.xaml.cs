@@ -21,24 +21,19 @@ namespace Calculator.Views
             
         }
 
-        private void variablesList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private void VariableSelected(object sender, SelectedItemChangedEventArgs e)
         {
             this.entryVariable.Text = e.SelectedItem.ToString();
         }
 
-        private void functionsUserList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private void UserFunctionSelected(object sender, SelectedItemChangedEventArgs e)
         {
             this.entryFunction.Text = e.SelectedItem.ToString();
         }
 
-        private void functionsBuiltList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private void BuiltFunctionSelected(object sender, SelectedItemChangedEventArgs e)
         {
             this.entryFunction.Text = e.SelectedItem.ToString();
-        }
-
-
-        private void OnMove(object sender, EventArgs e)
-        {
         }
 
         //private void OnBuiltFunction(object sender, EventArgs e)

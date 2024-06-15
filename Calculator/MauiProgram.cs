@@ -4,6 +4,8 @@ using Calculator.Services;
 using Calculator.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
+using Calculator.ViewModels.Interfaces;
+using Calculator.Views.Services;
 
 namespace Calculator
 {
@@ -20,6 +22,7 @@ namespace Calculator
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            builder.Services.AddTransient<IAlertService, AlertService>();
             builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<MainViewModel>();
 
