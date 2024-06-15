@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Calculator.ViewModels"
+             x:Class="Calculator.Views.MainPage"
+             x:DataType="vm:MainViewModel">
+
+    <Grid Padding="5" RowSpacing="5" ColumnSpacing="5"
+          RowDefinitions="*"
+          ColumnDefinitions="*,*">
+
+        <Grid BackgroundColor="Gray" Padding="5" RowSpacing="5" ColumnSpacing="5" Grid.Row="0" Grid.Column="0"
+              RowDefinitions="2*,*,*,*,*,*,*,*"
+              ColumnDefinitions="*,*,*,*">
+
+            <Entry 
+            x:Name="result"
+            Grid.ColumnSpan="4"
+            BackgroundColor="White"
+            FontAttributes="Bold"
+            FontSize="48"
+            HorizontalTextAlignment="End"
+            Text="{Binding Result}"
+            TextColor="Black"
+            VerticalTextAlignment="Center"/>
+
+
+
+            <Button BackgroundColor="LightGray" Text="C" Grid.Row="1" Grid.Column="0"
+                    Command="{Binding ClearCommand}"/>
+            <Button BackgroundColor="LightGray" Text="sqrt" Grid.Row="1" Grid.Column="1"
+                    Command="{Binding AddSpecificSymbolCommand}" CommandParameter="sqrt"/>
+            <Button BackgroundColor="LightGray" Text="^n" Grid.Row="1" Grid.Column="2"
+                    Command="{Binding AddSpecificSymbolCommand}" CommandParameter="^n"/>
+
+            <Button BackgroundColor="LightGray" Text="(" Grid.Row="2" Grid.Column="0" 
+                    Command="{Binding AddSymbolCommand}" CommandParameter="("/>
+            <Button BackgroundColor="LightGray" Text=")" Grid.Row="2" Grid.Column="1" 
+                    Command="{Binding AddSymbolCommand}" CommandParameter=")"/>
+            <Button BackgroundColor="LightGray" Text="^2" Grid.Row="2" Grid.Column="2"
+                    Command="{Binding AddSpecificSymbolCommand}" CommandParameter="^2"/>
+            <Button BackgroundColor="LightGray" Text="/" Grid.Row="2" Grid.Column="3" 
+                    Command="{Binding AddSymbolCommand}" CommandParameter="/"/>
+
+            <Button BackgroundColor="LightGray" Text="7"  Grid.Row="3" Grid.Column="0" 
+                    Command="{Binding AddSymbolCommand}" CommandParameter="7"/>
+            <Button BackgroundColor="LightGray" Text="8" Grid.Row="3" Grid.Column="1"  
+                    Command="{Binding AddSymbolCommand}" CommandParameter="8"/>
+            <Button BackgroundColor="LightGray" Text="9" Grid.Row="3" Grid.Column="2"  
+                    Command="{Binding AddSymbolCommand}" CommandParameter="9"/>
+            <Button BackgroundColor="LightGray" Text="*" Grid.Row="3" Grid.Column="3"  
+                    Command="{Binding AddSymbolCommand}" CommandParameter="*"/>
+
+            <Button BackgroundColor="LightGray" Text="4" Grid.Row="4" Grid.Column="0" 
+                    Command="{Binding AddSymbolCommand}" CommandParameter="4"/>
+            <Button BackgroundColor="LightGray" Text="5" Grid.Row="4" Grid.Column="1" 
+                    Command="{Binding AddSymbolCommand}" CommandParameter="5"/>
+            <Button BackgroundColor="LightGray" Text="6" Grid.Row="4" Grid.Column="2" 
+                    Command="{Binding AddSymbolCommand}" CommandParameter="6"/>
+            <Button BackgroundColor="LightGray" Text="-" Grid.Row="4" Grid.Column="3" 
+                    Command="{Binding AddSymbolCommand}" CommandParameter="-"/>
+
+            <Button BackgroundColor="LightGray" Text="1" Grid.Row="5" Grid.Column="0" 
+                    Command="{Binding AddSymbolCommand}" CommandParameter="1"/>
+            <Button BackgroundColor="LightGray" Text="2" Grid.Row="5" Grid.Column="1" 
+                    Command="{Binding AddSymbolCommand}" CommandParameter="2"/>
+            <Button BackgroundColor="LightGray" Text="3" Grid.Row="5" Grid.Column="2" 
+                    Command="{Binding AddSymbolCommand}" CommandParameter="3"/>
+            <Button BackgroundColor="LightGray" Text="+" Grid.Row="5" Grid.Column="3" 
+                    Command="{Binding AddSymbolCommand}" CommandParameter="+"/>
+
+            <Button BackgroundColor="LightGray" Text="(-)" Grid.Row="6" Grid.Column="0" 
+                    Command="{Binding AddSymbolCommand}" CommandParameter="(-)"/>
+            <Button BackgroundColor="LightGray" Text="0" Grid.Row="6" Grid.Column="1"   
+                    Command="{Binding AddSymbolCommand}" CommandParameter="0"/>
+            <Button BackgroundColor="LightGray" Text="." Grid.Row="6" Grid.Column="2"   
+                    Command="{Binding AddSymbolCommand}" CommandParameter="."/>
+            <Button BackgroundColor="LightGray" Text="=" Grid.Row="6" Grid.Column="3"
+                    Command="{Binding CalculateCommand}"/>
+        </Grid>
+
+        <Grid  Padding="5" RowSpacing="5" ColumnSpacing="5" Grid.Row="0" Grid.Column="1"
+               RowDefinitions="*,*"
+               ColumnDefinitions="*">
+
+            <Grid BackgroundColor="Gray" Padding="5" RowSpacing="5" ColumnSpacing="5" Grid.Row="0" Grid.Column="0"
+                  RowDefinitions="*,4*,*"
+                  ColumnDefinitions="*">
+
+                <Entry x:Name="entryFunction"
+                  Placeholder="Enter function"
+                  BackgroundColor="White"
+                  Grid.ColumnSpan="2"
+                  TextColor="Black"
+                  FontAttributes="Bold"/>
+
+
+                <ScrollView Grid.Row="1">
+
+                    <StackLayout Padding="7">
+                        <ListView x:Name="functionsUserList" ItemSelected="functionsUserList_ItemSelected"
+                                  ItemsSource="{Binding Functions}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <ViewCell>
+                                        <ViewCell.View>
+                                            <Grid Padding="20, 5" ColumnSpacing="10" ColumnDefinitions="*, 160">
+                                                <Label VerticalTextAlignment="Center" Text="{Binding .}" Grid.Column="0"></Label>
+                                                <HorizontalStackLayout Grid.Column="1"
+                                                    Spacing="5"
+                                                    FlowDirection="RightToLeft">
+                                                    <Button BackgroundColor="LightPink" Text="Delete" Padding="5,2"
+                                                            WidthRequest="70"
+                                                            MinimumHeightRequest="0"
+                                                            Command="{Binding Source={x:RelativeSource 
+                                                                AncestorType={x:Type vm:MainViewModel}}, 
+                                                                Path=DeleteFunctionCommand}"
+                                                            CommandParameter="{Binding .}">
+                                                    </Button>
+                                                    <Button BackgroundColor="LightGreen" Text="Use" Padding="5,2"
+                                                            WidthRequest="70"
+                                                            MinimumHeightRequest="0"
+                                                            Command="{Binding Source={x:RelativeSource 
+                                                                AncestorType={x:Type vm:MainViewModel}}, 
+                                                                Path=UseFunctionCommand}"
+                                                            CommandParameter="{Binding .}">
+                                                    </Button>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+                                        </ViewCell.View>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackLayout>
+
+                </ScrollView>
+
+                <!--<ScrollView Grid.Row="1" Grid.Column="1">
+
+                    <StackLayout Padding="7">
+                        <ListView x:Name="functionsBuiltList" ItemSelected="functionsBuiltList_ItemSelected" />
+                    </StackLayout>
+
+                </ScrollView>-->
+
+                <HorizontalStackLayout Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="0">
+                    <Button Margin="1" BackgroundColor="LightGreen" Text="Add function" 
+                            Command="{Binding AddFunctionCommand}" CommandParameter="{Binding Source={x:Reference entryFunction}, Path=Text}"/>
+                    <Button Margin="1" BackgroundColor="LightGreen" Text="Built-in function"  Clicked="OnBuiltFunction"/>-->
+                </HorizontalStackLayout>
+
+
+            </Grid>
+
+            <Grid BackgroundColor="Gray" Padding="5" RowSpacing="5" ColumnSpacing="5" Grid.Row="1" Grid.Column="0"
+                  RowDefinitions="*,4*,*"
+                  ColumnDefinitions="*">
+
+                <Entry x:Name="entryVariable"
+                Placeholder="Enter variable"
+                BackgroundColor="White"
+                TextColor="Black"
+                FontAttributes="Bold"/>
+
+                <ScrollView Grid.Row="1" Grid.Column="0">
+
+                    <StackLayout Padding="7">
+
+                        <ListView x:Name="variablesList" ItemSelected="variablesList_ItemSelected"
+                                  ItemsSource="{Binding Variables}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <ViewCell>
+                                        <ViewCell.View>
+                                            <Grid Padding="20, 5" ColumnSpacing="10" ColumnDefinitions="*, 160">
+                                                <Label VerticalTextAlignment="Center" Text="{Binding .}" Grid.Column="0"></Label>
+                                                <HorizontalStackLayout Grid.Column="1"
+                                                                       Spacing="5"
+                                                                       FlowDirection="RightToLeft">
+                                                    <Button BackgroundColor="LightPink" Text="Delete" Padding="5,2"
+                                                            WidthRequest="70"
+                                                            MinimumHeightRequest="0"
+                                                            Command="{Binding Source={x:RelativeSource 
+                                                                AncestorType={x:Type vm:MainViewModel}}, 
+                                                                Path=DeleteVariableCommand}"
+                                                        CommandParameter="{Binding .}">
+                                                    </Button>
+                                                    <Button BackgroundColor="LightGreen" Text="Use" Padding="5,2"
+                                                            WidthRequest="70"
+                                                            MinimumHeightRequest="0"
+                                                            Command="{Binding Source={x:RelativeSource 
+                                                                AncestorType={x:Type vm:MainViewModel}}, 
+                                                                Path=UseVariableCommand}"
+                                                        CommandParameter="{Binding .}">
+                                                    </Button>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+                                        </ViewCell.View>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        
+                    </StackLayout>
+                    
+                </ScrollView>
+
+                <HorizontalStackLayout Grid.Row="2" Grid.Column="0">
+                    <Button Margin="1" BackgroundColor="LightGreen" Text="Add variable" 
+                            Command="{Binding AddVariableCommand}" CommandParameter="{Binding Source={x:Reference entryVariable}, Path=Text}"/>
+                </HorizontalStackLayout>
+
+            </Grid>
+
+        </Grid>
+        
+    </Grid>
+
+</ContentPage>
