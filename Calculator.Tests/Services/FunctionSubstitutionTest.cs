@@ -4,11 +4,11 @@ using Calculator.Services.Data.Interfaces;
 using Calculator.Services.Interfaces;
 
 [TestClass]
-public class VarSubstitutionTest
+public class FunctionSubstitutionTest
 {
     private ISubstitutionService _substitutionService; 
 
-    public UnitTest1()
+    public FunctionSubstitutionTest()
     {
         _substitutionService = new FunctionSubstitutionService(new TestRepository());
     }
@@ -57,7 +57,7 @@ public class VarSubstitutionTest
 
     class TestRepository : IFunctionRepository
     {
-        public Task AddVFunctionAsync(Function function)
+        public Task AddFunctionAsync(Function function)
         {
             throw new NotImplementedException();
         }
