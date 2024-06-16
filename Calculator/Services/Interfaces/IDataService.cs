@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Calculator.Services.Interfaces
 {
-    public interface IDataService
+    public interface IDataService<T>
     {
-        Task<IEnumerable<T>> GetAsync<T>();
-        Task AddAsync<T>(string expression);
-        Task DeleteAsync<T>(string name);
+        Task<IEnumerable<string>> GetAsync();
+        Task AddAsync(string expression);
+        Task DeleteAsync(string expression);
     }
 }

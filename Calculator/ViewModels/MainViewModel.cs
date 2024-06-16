@@ -1,4 +1,5 @@
-﻿using Calculator.Services.Interfaces;
+﻿using Calculator.Models;
+using Calculator.Services.Interfaces;
 using Calculator.ViewModels.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -18,6 +19,9 @@ namespace Calculator.ViewModels
     {
         private readonly IValidatorManager _validator;
         private readonly IAlertService _alert;
+        private readonly ICalculator _calculator;
+        private readonly IDataService<Function> _functions;
+        private readonly IDataService<Variable> _variables;
 
         //Not sure if it should be here but whatever
         private static readonly Dictionary<string, string> _actionReplacements = new Dictionary<string, string>()
@@ -64,13 +68,30 @@ namespace Calculator.ViewModels
         public ObservableCollection<string> Functions { get; set; }
         public ObservableCollection<string> Variables { get; set; }
 
-        public MainViewModel(IValidatorManager validator, IAlertService alert)
+        public MainViewModel(IValidatorManager validator, IAlertService alert,
+            ICalculator calculator, IDataService<Function> functions,
+            IDataService<Variable> variables)
         {
             _validator = validator;
             _alert = alert;
+            _calculator = calculator;
+            _functions = functions;
+            _variables = variables;
 
             Functions = new ObservableCollection<string>();
             Variables = new ObservableCollection<string>();
+        }
+
+        private async void LoadData()
+        {
+            foreach(var function in await _functions.GetAsync())
+            {
+                Functions.Add(function);
+            }
+            foreach (var variable in await _variables.GetAsync())
+            {
+                Variables.Add(variable);
+            }
         }
 
         #region Input commands
@@ -89,13 +110,21 @@ namespace Calculator.ViewModels
         [RelayCommand]
         async Task OnCalculate()
         {
-            // else if(Validate(this.result.Text) = Ok);
-            // this.result.Text = Calculate
-            // else
-            //await this.DisplayAlert("Validation error",( Validate(this.result.Text).Error), "Exite");
-            Result = "Non implemented";
+            var validationResult = _validator.ValidateExpression(Result);
+            if (validationResult.Status == Models.Enum.ResultStatus.Error)
+            {
+                await _alert.DisplayErrorAsync(validationResult.ErrorMessages);
+                return;
+            }
 
-            await Task.CompletedTask;
+            try
+            {
+                Result = await _calculator.CalculateAsync(Result);
+            }
+            catch (Exception ex)
+            {
+                await _alert.DisplayErrorAsync(ex.Message);
+            }
         }
 
         [RelayCommand]
@@ -127,10 +156,15 @@ namespace Calculator.ViewModels
                 return;
             }
 
-            //Add repo
-            Functions.Add(value);
-
-            await Task.CompletedTask;
+            try
+            {
+                await _functions.AddAsync(value);
+                Functions.Add(value);
+            }
+            catch (Exception ex)
+            {
+                await _alert.DisplayErrorAsync(ex.Message);
+            }
         }
 
         /// <summary>
@@ -141,11 +175,17 @@ namespace Calculator.ViewModels
         [RelayCommand]
         async Task DeleteFunction(object obj)
         {
-            if (obj is not string expression) return;
+            if (obj is not string value) return;
 
-            var res = Functions.Remove(expression);
-
-            await Task.CompletedTask;
+            try
+            {
+                await _functions.DeleteAsync(value);
+                var res = Functions.Remove(value);
+            }
+            catch (Exception ex)
+            {
+                await _alert.DisplayErrorAsync(ex.Message);
+            }
         }
 
         /// <summary>
@@ -181,8 +221,15 @@ namespace Calculator.ViewModels
                 return;
             }
 
-            //Add repo
-            Variables.Add(value);
+            try
+            {
+                await _variables.AddAsync(value);
+                Variables.Add(value);
+            }
+            catch (Exception ex)
+            {
+                await _alert.DisplayErrorAsync(ex.Message);
+            }
 
             await Task.CompletedTask;
         }
@@ -195,10 +242,18 @@ namespace Calculator.ViewModels
         [RelayCommand]
         async Task OnDeleteVariable(object obj)
         {
-            if (obj is not string name) return;
+            if (obj is not string value) return;
 
             //Add repo
-            var res = Variables.Remove(name);
+            try
+            {
+                await _variables.DeleteAsync(value);
+                var res = Variables.Remove(value);
+            }
+            catch (Exception ex)
+            {
+                await _alert.DisplayErrorAsync(ex.Message);
+            }
 
             await Task.CompletedTask;
         }

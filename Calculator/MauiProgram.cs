@@ -22,15 +22,13 @@ namespace Calculator
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            builder.Services.AddTransient<IAlertService, AlertService>();
-            builder.Services.AddTransient<MainPage>();
-            builder.Services.AddTransient<MainViewModel>();
-
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
 
-            builder.Services.ConfigureValidators();
+            builder.Services
+                .ConfigureValidators()
+                .ConfigurePresentation();
 
             return builder.Build();
         }
@@ -58,6 +56,15 @@ namespace Calculator
             {
                 services.AddTransient(interfaceType, implementation);
             }
+
+            return services;
+        }
+
+        private static IServiceCollection ConfigurePresentation(this IServiceCollection services)
+        {
+            services.AddTransient<IAlertService, AlertService>();
+            services.AddTransient<MainPage>();
+            services.AddTransient<MainViewModel>();
 
             return services;
         }
