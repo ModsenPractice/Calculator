@@ -2,7 +2,7 @@ using Calculator.Services.Data.Repositories;
 using Calculator.Models;
 using System.Threading.Tasks;
 
-namespace Calculator.Tests
+namespace Calculator.Tests.RepositoriesTests
 {
     [TestClass]
     public class FunctionRepositoryTest
@@ -54,7 +54,7 @@ namespace Calculator.Tests
             Assert.IsNotNull(functions);
             Assert.AreEqual(1, functions.Count());
 
-            
+
         }
 
         [TestMethod]
