@@ -1,4 +1,8 @@
-﻿using Calculator.Services;
+﻿using Calculator.Models;
+using Calculator.Services;
+using Calculator.Services.Data.Interfaces;
+using Calculator.Services.Data.Repositories;
+using Calculator.Services.Data.Services;
 using Calculator.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
@@ -23,6 +27,9 @@ namespace Calculator
 #endif
 
             builder.Services.ConfigureValidators();
+            builder.Services.ConfigureDataServices();
+
+            builder.Services.AddScoped<ICalculator, CalculatorService>();
 
             return builder.Build();
         }
@@ -50,6 +57,16 @@ namespace Calculator
             {
                 services.AddTransient(interfaceType, implementation);
             }
+
+            return services;
+        }
+
+        private static IServiceCollection ConfigureDataServices(this IServiceCollection services)
+        {
+            services.AddScoped<IFunctionRepository, FunctionRepository>();
+            services.AddScoped<IVariableRepository, VariableRepository>();
+            services.AddScoped<IDataService<Function>, FunctionService>();
+            services.AddScoped<IDataService<Variable>, VariableService>();
 
             return services;
         }

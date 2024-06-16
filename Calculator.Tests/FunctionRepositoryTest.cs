@@ -44,7 +44,7 @@ namespace Calculator.Tests
             var function = new Function()
             {
                 Name = "f1",
-                Params = new Dictionary<string, string>(),
+                Params = new List<string>(),
                 Expression = "x+x^2"
             };
 
@@ -65,13 +65,13 @@ namespace Calculator.Tests
             var function1 = new Function
             {
                 Name = "f1",
-                Params = new Dictionary<string, string>(),
+                Params = new List<string>(),
                 Expression = "x+x^2"
             };
             var function2 = new Function
             {
                 Name = "f2",
-                Params = new Dictionary<string, string>(),
+                Params = new List<string>(),
                 Expression = "x / y"
             };
             await repository.AddFunctionAsync(function1);
