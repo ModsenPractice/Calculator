@@ -70,5 +70,22 @@ namespace Calculator.Tests
             // Assert
             Assert.AreEqual("1", result);
         }
+
+        [TestMethod]
+        public void EvaluateExpression_ExpressionWithNaturalLogarithm_ReturnsCorrectResult()
+        {
+            // Arrange
+            var tokens = new List<Token>
+            {
+                new Token { Type = TokenType.Operand, Value = Math.E.ToString() },
+                new Token { Type = TokenType.Function, Value = "ln" },
+            };
+
+            // Act
+            var result = _evaluator.EvaluateExpression(tokens);
+
+            // Assert
+            Assert.AreEqual("1", result);
+        }
     }
 }

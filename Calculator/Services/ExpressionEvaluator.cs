@@ -94,8 +94,6 @@ namespace Calculator.Services
                     return Math.Cos(operand);
                 case "ln":
                     return Math.Log(operand);
-                case "tg":
-                    return Math.Tan(operand);
                 case "exp":
                     return Math.Exp(operand);
                 default:
