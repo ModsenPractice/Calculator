@@ -9,7 +9,7 @@ namespace Calculator.Models
     public class Function
     {
         public string Name { get; set; } = null!;
-        public Dictionary<string, string> Params { get; set; } = [];
+        public IEnumerable<string> Params { get; set; } = [];
         public string Expression { get; set; } = null!;
     }
 }
