@@ -24,5 +24,10 @@ namespace Calculator.Models
         {
             return HashCode.Combine(Name, Params, Expression);
         }
+
+        public override string ToString()
+        {
+            return $"{Name}({Params.Aggregate((first, second) => $"{first},{second}")})={Expression}";
+        }
     }
 }

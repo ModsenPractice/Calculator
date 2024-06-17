@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +22,11 @@ namespace Calculator.Models
         public override int GetHashCode()
         {
             return HashCode.Combine(Name, Value);
+        }
+
+        public override string ToString()
+        {
+            return $"{Name}={Value}";
         }
     }
 }
