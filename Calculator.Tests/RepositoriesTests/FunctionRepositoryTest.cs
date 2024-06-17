@@ -2,7 +2,7 @@ using Calculator.Services.Data.Repositories;
 using Calculator.Models;
 using System.Threading.Tasks;
 
-namespace Calculator.Tests
+namespace Calculator.Tests.RepositoriesTests
 {
     [TestClass]
     public class FunctionRepositoryTest
@@ -44,7 +44,7 @@ namespace Calculator.Tests
             var function = new Function()
             {
                 Name = "f1",
-                Params = new Dictionary<string, string>(),
+                Params = new List<string>(),
                 Expression = "x+x^2"
             };
 
@@ -54,7 +54,7 @@ namespace Calculator.Tests
             Assert.IsNotNull(functions);
             Assert.AreEqual(1, functions.Count());
 
-            
+
         }
 
         [TestMethod]
@@ -65,13 +65,13 @@ namespace Calculator.Tests
             var function1 = new Function
             {
                 Name = "f1",
-                Params = new Dictionary<string, string>(),
+                Params = new List<string>(),
                 Expression = "x+x^2"
             };
             var function2 = new Function
             {
                 Name = "f2",
-                Params = new Dictionary<string, string>(),
+                Params = new List<string>(),
                 Expression = "x / y"
             };
             await repository.AddFunctionAsync(function1);

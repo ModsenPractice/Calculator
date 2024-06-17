@@ -11,7 +11,7 @@ namespace Calculator.Services.Data.Repositories
 {
     public class VariableRepository : IVariableRepository
     {
-        private readonly string variableFilePath = "C:\\Users\\POOLSHOT\\Source\\Repos\\Calculator\\Calculator\\variables.json";
+        private readonly string variableFilePath = "variables.json";
         public async Task<IEnumerable<Variable>> GetVariablesAsync()
         {
             string variablesJson = await File.ReadAllTextAsync(variableFilePath);

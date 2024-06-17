@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Calculator.Services.Interfaces
+namespace Calculator.Services.Data.Interfaces
 {
     public interface IDataService<T>
     {

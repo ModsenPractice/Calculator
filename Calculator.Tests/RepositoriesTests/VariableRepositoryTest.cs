@@ -2,7 +2,7 @@
 using Calculator.Models;
 using System.Threading.Tasks;
 
-namespace Calculator.Tests
+namespace Calculator.Tests.RepositoriesTests
 {
     [TestClass]
     public class VariableRepositoryTest

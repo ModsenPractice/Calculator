@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace Calculator.Services.Interfaces
 {
+    /// <summary>
+    /// Represent object that transforms string expression to collection of tokens
+    /// </summary>
     public interface ITokenizer
     {
-        IEnumerable<Token> Tokenizer(string source);
+        IEnumerable<Token> Tokenize(string source);
     }
 }
