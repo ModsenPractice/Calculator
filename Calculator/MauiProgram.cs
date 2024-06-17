@@ -1,5 +1,8 @@
-﻿using Calculator.Services;
+using Calculator.Models;
+using Calculator.Services;
 using Calculator.Services.Interfaces;
+using Calculator.Services.Parsing;
+using Calculator.Services.Parsing.Utility;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
 
@@ -18,8 +21,13 @@ namespace Calculator
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            builder.Services.AddSingleton<ITokenizer, Tokenizer>();
+            builder.Services.AddSingleton<IParser<Variable>, VariableParser>();
+            builder.Services.AddSingleton<IParser<Function>, FunctionParser>();
+            builder.Services.AddSingleton<IParser<IEnumerable<Token>>, TokensParser>();
+
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             builder.Services.ConfigureValidators();
