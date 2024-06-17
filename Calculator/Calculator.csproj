@@ -70,4 +70,13 @@
 	  <Folder Include="Views\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="functions.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="variables.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>
