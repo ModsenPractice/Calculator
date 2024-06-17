@@ -1,3 +1,5 @@
+using Calculator.ViewModels;
+using Calculator.Views;
 using Calculator.Models;
 using Calculator.Services;
 using Calculator.Services.Data.Interfaces;
@@ -8,6 +10,8 @@ using Calculator.Services.Parsing;
 using Calculator.Services.Parsing.Utility;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
+using Calculator.ViewModels.Interfaces;
+using Calculator.Views.Services;
 
 namespace Calculator
 {
@@ -33,8 +37,10 @@ namespace Calculator
             builder.Logging.AddDebug();
 #endif
 
-            builder.Services.ConfigureValidators();
-            builder.Services.ConfigureDataServices();
+            builder.Services
+                .ConfigureValidators()
+                .ConfigurePresentation()
+                .ConfigureDataServices();
 
             builder.Services.AddScoped<ICalculator, CalculatorService>();
 
@@ -74,6 +80,15 @@ namespace Calculator
             services.AddScoped<IVariableRepository, VariableRepository>();
             services.AddScoped<IDataService<Function>, FunctionService>();
             services.AddScoped<IDataService<Variable>, VariableService>();
+
+            return services;
+        }
+
+        private static IServiceCollection ConfigurePresentation(this IServiceCollection services)
+        {
+            services.AddTransient<IAlertService, AlertService>();
+            services.AddTransient<MainPage>();
+            services.AddTransient<MainViewModel>();
 
             return services;
         }
