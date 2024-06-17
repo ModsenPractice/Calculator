@@ -42,6 +42,9 @@ namespace Calculator
                 .ConfigurePresentation()
                 .ConfigureDataServices();
 
+            builder.Services.AddSingleton<ISubstitutionService, VarSubstitutionService>();
+            builder.Services.AddSingleton<ISubstitutionService, FunctionSubstitutionService>();
+            builder.Services.AddSingleton<IExpressionEvaluator, ExpressionEvaluator>();
             builder.Services.AddScoped<ICalculator, CalculatorService>();
 
             return builder.Build();
