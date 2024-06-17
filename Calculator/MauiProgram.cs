@@ -1,7 +1,17 @@
-﻿using Calculator.Services;
+using Calculator.ViewModels;
+using Calculator.Views;
+using Calculator.Models;
+using Calculator.Services;
+using Calculator.Services.Data.Interfaces;
+using Calculator.Services.Data.Repositories;
+using Calculator.Services.Data.Services;
 using Calculator.Services.Interfaces;
+using Calculator.Services.Parsing;
+using Calculator.Services.Parsing.Utility;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
+using Calculator.ViewModels.Interfaces;
+using Calculator.Views.Services;
 
 namespace Calculator
 {
@@ -18,11 +28,21 @@ namespace Calculator
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            builder.Services.AddSingleton<ITokenizer, Tokenizer>();
+            builder.Services.AddSingleton<IParser<Variable>, VariableParser>();
+            builder.Services.AddSingleton<IParser<Function>, FunctionParser>();
+            builder.Services.AddSingleton<IParser<IEnumerable<Token>>, TokensParser>();
+
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
-            builder.Services.ConfigureValidators();
+            builder.Services
+                .ConfigureValidators()
+                .ConfigurePresentation()
+                .ConfigureDataServices();
+
+            builder.Services.AddScoped<ICalculator, CalculatorService>();
 
             return builder.Build();
         }
@@ -50,6 +70,25 @@ namespace Calculator
             {
                 services.AddTransient(interfaceType, implementation);
             }
+
+            return services;
+        }
+
+        private static IServiceCollection ConfigureDataServices(this IServiceCollection services)
+        {
+            services.AddScoped<IFunctionRepository, FunctionRepository>();
+            services.AddScoped<IVariableRepository, VariableRepository>();
+            services.AddScoped<IDataService<Function>, FunctionService>();
+            services.AddScoped<IDataService<Variable>, VariableService>();
+
+            return services;
+        }
+
+        private static IServiceCollection ConfigurePresentation(this IServiceCollection services)
+        {
+            services.AddTransient<IAlertService, AlertService>();
+            services.AddTransient<MainPage>();
+            services.AddTransient<MainViewModel>();
 
             return services;
         }

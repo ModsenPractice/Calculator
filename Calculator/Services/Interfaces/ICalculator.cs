@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Calculator.Services.Interfaces
 {
-    public interface ICalcuator
+    public interface ICalculator
     {
         Task<string> CalculateAsync(string expression);
     }
