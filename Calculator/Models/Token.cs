@@ -11,5 +11,26 @@ namespace Calculator.Models
     {
         public TokenType Type { get; set; }
         public string Value { get; set; } = null!;
+
+        public Token() { }
+
+        public Token(TokenType type, string value)
+        {
+            Type = type;
+            Value = value;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Token token &&
+                   Type == token.Type &&
+                   Value == token.Value;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Type, Value);
+        }
+
     }
 }
