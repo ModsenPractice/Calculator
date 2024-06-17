@@ -1,7 +1,7 @@
 ﻿using Calculator.Models;
+using Calculator.Services.Data.Interfaces;
 using Calculator.Services.Interfaces;
 using Calculator.ViewModels.Interfaces;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
@@ -80,6 +80,8 @@ namespace Calculator.ViewModels
 
             Functions = new ObservableCollection<string>();
             Variables = new ObservableCollection<string>();
+
+            LoadData();
         }
 
         private async void LoadData()

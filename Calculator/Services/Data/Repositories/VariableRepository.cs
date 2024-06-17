@@ -11,10 +11,33 @@ namespace Calculator.Services.Data.Repositories
 {
     public class VariableRepository : IVariableRepository
     {
-        private readonly string variableFilePath = "variables.json";
+        private readonly string _variableFileName = "variables.json";
+        private readonly string _targetFile;
+
+        public VariableRepository()
+        {
+            _targetFile = Path.Combine(FileSystem.Current.AppDataDirectory, _variableFileName);
+
+            Task.Run(() => EnsureCreated()).Wait();
+        }
+
+
+        private async Task EnsureCreated()
+        {
+
+            if (!File.Exists(_targetFile))
+            {
+                using Stream inputStream =
+                    await FileSystem.Current.OpenAppPackageFileAsync(_variableFileName);
+                using FileStream outputStream = File.Create(_targetFile);
+                await inputStream.CopyToAsync(outputStream);
+            }
+
+        }
+
         public async Task<IEnumerable<Variable>> GetVariablesAsync()
         {
-            string variablesJson = await File.ReadAllTextAsync(variableFilePath);
+            string variablesJson = await File.ReadAllTextAsync(_targetFile);
             if (!string.IsNullOrEmpty(variablesJson))
             {
                 IEnumerable<Variable>? deserializedVariables = JsonSerializer.Deserialize<IEnumerable<Variable>>(variablesJson);
@@ -33,7 +56,7 @@ namespace Calculator.Services.Data.Repositories
             IEnumerable<Variable> variables = await GetVariablesAsync();
             var updatedVariables = new List<Variable>(variables) { variable };
             string updatedVariableJson = JsonSerializer.Serialize(updatedVariables);
-            await File.WriteAllTextAsync(variableFilePath, updatedVariableJson);
+            await File.WriteAllTextAsync(_targetFile, updatedVariableJson);
 
         }
 
@@ -43,7 +66,7 @@ namespace Calculator.Services.Data.Repositories
             var updatedVariables = new List<Variable>(variables);
             updatedVariables.RemoveAll(f => f.Name == name);
             string updatedVariablesJson = JsonSerializer.Serialize(updatedVariables);
-            await File.WriteAllTextAsync(variableFilePath, updatedVariablesJson);
+            await File.WriteAllTextAsync(_targetFile, updatedVariablesJson);
 
         }
     }

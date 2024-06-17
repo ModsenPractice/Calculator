@@ -10,10 +10,34 @@ namespace Calculator.Services.Data.Repositories
 {
     public class FunctionRepository : IFunctionRepository
     {
-        private readonly string functionFilePath = "functions.json";
+        private readonly string _functionFileName = "functions.json";
+        private readonly string _targetFile;
+
+        public FunctionRepository()
+        {
+            _targetFile = Path.Combine(FileSystem.Current.AppDataDirectory, _functionFileName);
+
+            
+            Task.Run(() => EnsureCreated()).Wait();
+        }
+
+        private async Task EnsureCreated()
+        {
+
+            if (!File.Exists(_targetFile))
+            {
+                using Stream inputStream =
+                    await FileSystem.Current.OpenAppPackageFileAsync(_functionFileName);
+                using FileStream outputStream = File.Create(_targetFile);
+                await inputStream.CopyToAsync(outputStream);
+            }
+
+        }
+
         public async Task<IEnumerable<Function>> GetFunctionsAsync()
         {
-            string? functionsJson = await File.ReadAllTextAsync(functionFilePath);
+            string? functionsJson = await File.ReadAllTextAsync(_targetFile);
+
             if (!string.IsNullOrEmpty(functionsJson))
             {
                 IEnumerable<Function>? deserializedFunctions = JsonSerializer.Deserialize<IEnumerable<Function>?>(functionsJson);
@@ -32,7 +56,7 @@ namespace Calculator.Services.Data.Repositories
             IEnumerable<Function> functions = await GetFunctionsAsync();
             var updatedFunctions = new List<Function>(functions) { function };
             string updatedFunctionsJson = JsonSerializer.Serialize(updatedFunctions);
-            await File.WriteAllTextAsync(functionFilePath, updatedFunctionsJson);
+            await File.WriteAllTextAsync(_targetFile, updatedFunctionsJson);
 
         }
 
@@ -42,7 +66,7 @@ namespace Calculator.Services.Data.Repositories
             var updatedFunctions = new List<Function>(functions);
             updatedFunctions.RemoveAll(f => f.Name == name);
             string updatedFunctionsJson = JsonSerializer.Serialize(updatedFunctions);
-            await File.WriteAllTextAsync(functionFilePath, updatedFunctionsJson);
+            await File.WriteAllTextAsync(_targetFile, updatedFunctionsJson);
 
         }
     }

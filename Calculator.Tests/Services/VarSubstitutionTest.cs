@@ -3,7 +3,7 @@ using Calculator.Services;
 using Calculator.Services.Data.Interfaces;
 using Calculator.Services.Interfaces;
 
-namespace Calculator.Tests
+namespace Calculator.Tests.Services
 {
     [TestClass]
     public class VarSubstitutionTest

@@ -35,7 +35,7 @@ public class FunctionSubstitutionService : ISubstitutionService
 
                     for (int i = 0; i < funcArgs.Length; i++)
                     {
-                        resultExpression = Regex.Replace(resultExpression, @"\b" + funcArgs[i] + @"\b", argValues[i]);
+                        resultExpression = Regex.Replace(resultExpression, @"\b" + funcArgs[i] + @"\b", "("+argValues[i]+")");
                     }
 
                     source = source.Replace(match.Value, "(" + resultExpression + ")");
